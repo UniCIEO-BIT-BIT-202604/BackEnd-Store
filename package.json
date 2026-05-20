@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "BackEnd: API REST para una tienda de comida precocida",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Juan Carlos Jiménez Gutiérrez <jcarlosj.dev@gmail.com>",
+  "contributors" : [
+    "Miguel Atehortua <matehortua32@gmail.com>"
+  ],
+  "license": "ISC",
+  "type": "commonjs"
+}
