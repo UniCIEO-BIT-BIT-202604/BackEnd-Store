@@ -1,6 +1,13 @@
-const express = require( 'express' );
+import express from 'express';
+
+import dbConection from './config/mongo.config.js';
+
+import userRoutes from './routes/user.routes.js';
 
 const app = express();
+
+// Conexion a la base de datos
+dbConection();
 
 // Endpoint
 app.get( '/health', ( req, res ) => {
@@ -10,7 +17,7 @@ app.get( '/health', ( req, res ) => {
 } );
 
 // Endpoints agrupados por entidad
-app.use( '/users', require( './routes/user.routes.js' ) );
+app.use( '/users', userRoutes );
 
 // Lanzo el servidor web
 app.listen( 3000, () => {

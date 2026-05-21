@@ -1,7 +1,8 @@
-const { Router } = require( 'express' );
+import { Router } from 'express';
+
 const router = Router();
 
-const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/user.controller.js');
+import { getUsers, createUser, updateUser, deleteUser } from '../controllers/user.controller.js';
 
 
 // Definicion de las rutas para los usuarios
@@ -11,4 +12,4 @@ router.patch( '/', updateUser );
 router.delete( '/', deleteUser );
 
 
-module.exports = router;
+export default router;

@@ -23,7 +23,7 @@ function deleteUser( req, res ) {
 }
 
 
-module.exports = {
+export {
     getUsers,
     createUser,
     updateUser,
