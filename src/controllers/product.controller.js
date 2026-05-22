@@ -1,4 +1,4 @@
-import ProductModel from "../models/Product.model.js";
+import { insertProduct } from "../services/product.service.js";
 
 const getProducts = ( req, res ) => {
     res.json({
@@ -7,16 +7,25 @@ const getProducts = ( req, res ) => {
 }
 
 const createProduct = async ( req, res ) => {
-    // Obtengo los datos enviados en la petición
-    const inputData = req.body;
+    try {
+        // Obtengo los datos enviados en la petición
+        const inputData = req.body;
 
-    // Registra usando el Modelo y guarda la respuesta en la constante data
-    const data = await ProductModel.create( inputData );
+        // Registra usando el Modelo y guarda la respuesta en la constante data
+        const data = await insertProduct( inputData );
 
-    // Respondemos al cliente enviando los datos registrados
-    res.json({
-        data: data
-    });
+        // Respondemos al cliente enviando los datos registrados. El codigo de estado cuando se crea un recurso nuevo con exito
+        res.status(201).json({
+            data: data
+        });
+    } catch (error) {
+        console.error( error );         // Mensaje para la consola (Desarrollador)
+
+        // Respondemos al cliente enviando un mensaje humano. El codigo de estado cuando el servidor falla
+        res.status(500).json({
+            msg: 'No se pudo registrar el producto'
+        })
+    }
 }
 
 const updateProduct = ( req, res ) => {
