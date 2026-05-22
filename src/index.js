@@ -5,10 +5,13 @@ import dbConection from './config/mongo.config.js';
 import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js'
 
-const app = express();
+const app = express();      // Habilita la interpretacion de formatos JSON
 
 // Conexion a la base de datos
 dbConection();
+
+// Middlewares
+app.use( express.json() );
 
 // Endpoint
 app.get( '/health', ( req, res ) => {
