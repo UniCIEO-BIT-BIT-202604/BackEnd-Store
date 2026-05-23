@@ -10,6 +10,12 @@ function createUser( req, res ) {
     });
 }
 
+
+
+
+
+
+
 function updateUser( req, res ) {
     res.json({
         msg: 'Actualiza un usuario'

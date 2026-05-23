@@ -1,13 +1,18 @@
 import express from 'express';
-
 import dbConection from './config/mongo.config.js';
-
 import userRoutes from './routes/user.routes.js';
+import productRouter from './routes/product.routes.js';
+import categoryRouter from './routes/category.routes.js';
 
 const app = express();
 
 // Conexion a la base de datos
 dbConection();
+
+
+//middlewares
+app.use(express.json());
+
 
 // Endpoint
 app.get( '/health', ( req, res ) => {
@@ -18,6 +23,8 @@ app.get( '/health', ( req, res ) => {
 
 // Endpoints agrupados por entidad
 app.use( '/users', userRoutes );
+app.use ('/products', productRouter);
+app.use('/category', categoryRouter);
 
 // Lanzo el servidor web
 app.listen( 3000, () => {
