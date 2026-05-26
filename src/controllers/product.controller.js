@@ -1,4 +1,4 @@
-import { insertProduct } from "../services/product.service.js";
+import { dbGetProducts, insertProduct } from "../services/product.service.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async ( req, res ) => {
@@ -7,23 +7,34 @@ const createProduct = async ( req, res ) => {
 
         const data = await insertProduct( inputData );
 
-        res.json({
+        res.status( 201 ).json({
             msg: 'Crea un nuevo producto',
             data: data
         });
     } catch (error) {
         console.error( error );
 
-        res.json({
+        res.status(500).json({
             msg: 'Error: No se pudo crear el producto'
         });
     }
 }
 
-const getProducts = ( req, res ) => {
-    res.json({
-        msg: 'Obtener todos los productos'
-    });
+const getProducts = async ( req, res ) => {
+    try {
+        const data = await dbGetProducts();
+
+        res.json({
+            msg: 'Obtener todos los productos',
+            data: data
+        });
+    } catch (error) {
+        console.error( error );
+
+        res.status(500).json({
+            msg: 'ERROR: No pudo obtener los productos'
+        });
+    }
 }
 
 const updateProduct = ( req, res ) => {

@@ -24,7 +24,10 @@ const ProductSchema = new Schema({
         default: true
     }
 
-},{});
+},{
+    versionKey: false,
+    timestamps: true    // createdAt/updatedAt
+});
 
 // El modelo: Asociacion entre la estructura de datos y la coleccion donde voy a guardar esos datos
 const ProductModel = model(

@@ -4,7 +4,14 @@ const insertProduct = async ( newProduct ) => {
     return await ProductModel.create( newProduct );
 }
 
+const dbGetProducts = async () => {
+    return await ProductModel.find();
+}
+
+
+
 export {
-    insertProduct
+    insertProduct,
+    dbGetProducts
 }
 
