@@ -1,11 +1,9 @@
 import { Router } from 'express';
+import { createProduct, deleteProduct, getProducts, updateProduct } from '../controllers/product.controller.js';
 
 const router = Router();
 
-import { getProducts, createProduct, updateProduct, deleteProduct } from '../controllers/product.controller.js';
-
-
-// Define rutas para productos
+// Define las rutas para la entidad 'Product'
 router.get( '/', getProducts );
 router.post( '/', createProduct );
 router.patch( '/', updateProduct );

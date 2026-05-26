@@ -1,31 +1,29 @@
 import { insertProduct } from "../services/product.service.js";
 
-const getProducts = ( req, res ) => {
-    res.json({
-        msg: 'Listar Productos'
-    });
-}
-
+// Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async ( req, res ) => {
     try {
-        // Obtengo los datos enviados en la petición
         const inputData = req.body;
 
-        // Registra usando el Modelo y guarda la respuesta en la constante data
         const data = await insertProduct( inputData );
 
-        // Respondemos al cliente enviando los datos registrados. El codigo de estado cuando se crea un recurso nuevo con exito
-        res.status(201).json({
+        res.json({
+            msg: 'Crea un nuevo producto',
             data: data
         });
     } catch (error) {
-        console.error( error );         // Mensaje para la consola (Desarrollador)
+        console.error( error );
 
-        // Respondemos al cliente enviando un mensaje humano. El codigo de estado cuando el servidor falla
-        res.status(500).json({
-            msg: 'No se pudo registrar el producto'
-        })
+        res.json({
+            msg: 'Error: No se pudo crear el producto'
+        });
     }
+}
+
+const getProducts = ( req, res ) => {
+    res.json({
+        msg: 'Obtener todos los productos'
+    });
 }
 
 const updateProduct = ( req, res ) => {
@@ -41,10 +39,9 @@ const deleteProduct = ( req, res ) => {
 }
 
 
-
 export {
-    getProducts,
     createProduct,
+    getProducts,
     updateProduct,
     deleteProduct
-}
+};

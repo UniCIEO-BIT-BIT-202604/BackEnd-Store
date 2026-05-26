@@ -1,38 +1,38 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-// 1ra Parte: Definir el esquema
+// La estructura de datos de la entidad.
 const ProductSchema = new Schema({
     name: {
-        type: String,
-        required: true,
-        minLength: 12,
-        trim: true
+        type: String,       // Regla
+        required: true,     // Regla
+        minlength: 3,       // Regla
+        trim: true          // Modificador
     },
     description: String,
     price: {
         type: Number,
-        default: 0,
-        min: 0
+        min: 0,
+        default: 0
     },
     stock: {
         type: Number,
-        default: 1,
-        min: 1
+        min: 1,
+        default: 1
     },
     status: {
         type: Boolean,
         default: true
     }
-},{
-    versionKey: false,
-    timestamps: true
-});
 
-// 2da Parte: Definir el modelo
-const ProductModel = model( 
-    'product',          // Define el nombre de la coleccion que almacenara el objeto creado con este Schema 
-    ProductSchema       // Asocia la estructura de datos a la coleccion 
+},{});
+
+// El modelo: Asociacion entre la estructura de datos y la coleccion donde voy a guardar esos datos
+const ProductModel = model(
+    'product',  // Define el nombre de la collection donde voy a guardar los Documentos
+    ProductSchema
 );
 
 
 export default ProductModel;
+
+
