@@ -192,6 +192,10 @@ async function updateUser(req, res) {
         const inputData = req.body;
         const { email, nickname } = inputData;
 
+        /*
+        // =========================================================================
+        // ENFOQUE ANTERIOR: VALIDACIONES MANUALES DIRECTAS EN CONTROLADOR (PREVENTIVAS)
+        // =========================================================================
         // 1. Validar si el ID proporcionado es un ObjectId válido de MongoDB
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({
@@ -233,8 +237,25 @@ async function updateUser(req, res) {
                 });
             }
         }
+        // =========================================================================
+        */
 
-        // Proceder a la actualización definitiva si todas las validaciones preventivas pasan
+        // Proceder a buscar el usuario físicamente en la base de datos
+        // Si el formato del ID es inválido, Mongoose disparará automáticamente un CastError
+        const existingUser = await dbGetUserByIdRaw(id);
+
+        // Lanzar una excepción de negocio si el usuario no existe en la base de datos
+        if (!existingUser) {
+            throw new Error('El usuario que deseas actualizar no existe en el sistema');
+        }
+
+        // Lanzar una excepción si se intenta modificar un administrador de forma directa
+        if (existingUser.role === 'administrator') {
+            throw new Error('Operación denegada: No está permitido modificar usuarios con rol de administrador');
+        }
+
+        // Proceder a la actualización definitiva
+        // Las validaciones de duplicados de Email/Nickname se resolverán mediante excepciones de índice único de MongoDB (11000)
         const data = await dbUpdateUser(id, inputData);
 
         res.json({
@@ -243,6 +264,42 @@ async function updateUser(req, res) {
     } catch (error) {
         console.error(error);
 
+        // A. Capturar error de negocio: El usuario no existe en el sistema
+        if (error.message.includes('El usuario que deseas actualizar no existe')) {
+            return res.status(404).json({
+                msg: error.message
+            });
+        }
+
+        // B. Capturar error de negocio: Bloqueo de modificación de administradores
+        if (error.message.includes('No está permitido modificar usuarios con rol de administrador')) {
+            return res.status(403).json({
+                msg: error.message
+            });
+        }
+
+        // C. Controlar errores de formato de parámetros (Casteo de Mongoose)
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                msg: 'El formato del ID de usuario provisto es inválido para la base de datos'
+            });
+        }
+
+        // D. Controlar errores de índices únicos de MongoDB (Código 11000) para Email y Nickname duplicados
+        if (error.code === 11000) {
+            const duplicatedField = Object.keys(error.keyValue)[0];
+
+            const errorMessages = {
+                email: 'El correo electrónico ya se encuentra registrado por otro usuario',
+                nickname: 'El nickname ya se encuentra en uso por otro usuario'
+            };
+
+            return res.status(400).json({
+                msg: errorMessages[duplicatedField] || 'Ya existe un registro con algunos de estos valores únicos'
+            });
+        }
+
+        // E. Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo actualizar el usuario'
         });
