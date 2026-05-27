@@ -21,14 +21,59 @@ async function getUsers(req, res) {
 async function getUserById(req, res) {
     try {
         const { id } = req.params;
-        const data = await dbGetUserById(id);
 
+        /*
+        // =========================================================================
+        // ENFOQUE ANTERIOR: VALIDACIONES MANUALES DIRECTAS EN CONTROLADOR
+        // =========================================================================
+        // 1. Validar si el ID proporcionado tiene un formato válido de MongoDB
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                msg: 'El ID proporcionado no tiene un formato válido de MongoDB'
+            });
+        }
+
+        // 2. Validar si el usuario existe físicamente en la base de datos
+        const existingUser = await dbGetUserByIdRaw(id);
+        if (!existingUser) {
+            return res.status(404).json({
+                msg: 'El usuario solicitado no existe en el sistema'
+            });
+        }
+        // =========================================================================
+        */
+
+        // Proceder a buscar el usuario físicamente en la base de datos
+        // Si el formato del ID es inválido, Mongoose disparará automáticamente un CastError
+        const existingUser = await dbGetUserByIdRaw(id);
+
+        // Lanzar una excepción de negocio si el usuario no existe en la base de datos
+        if (!existingUser) {
+            throw new Error('El usuario solicitado no existe en el sistema');
+        }
+
+        // Retornar el usuario encontrado con éxito
         res.json({
-            data: data
+            data: existingUser
         });
     } catch (error) {
         console.error(error);
 
+        // A. Capturar error lanzado: El usuario no existe en el sistema
+        if (error.message.includes('El usuario solicitado no existe')) {
+            return res.status(404).json({
+                msg: error.message
+            });
+        }
+
+        // B. Controlar errores de formato de parámetros (Casteo de Mongoose)
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                msg: 'El formato del ID de usuario provisto es inválido para la base de datos'
+            });
+        }
+
+        // C. Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo obtener el usuario'
         });
