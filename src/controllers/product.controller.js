@@ -1,11 +1,11 @@
-import { dbGetProducts, insertProduct } from "../services/product.service.js";
+import { dbCreateProduct, dbDeleteProduct, dbGetProducts } from "../services/product.service.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async ( req, res ) => {
     try {
         const inputData = req.body;
 
-        const data = await insertProduct( inputData );
+        const data = await dbCreateProduct( inputData );
 
         res.status( 201 ).json({
             msg: 'Crea un nuevo producto',
@@ -43,10 +43,23 @@ const updateProduct = ( req, res ) => {
     });
 }
 
-const deleteProduct = ( req, res ) => {
-    res.json({
-        msg: 'Elimina un producto'
-    });
+const deleteProduct = async ( req, res ) => {
+    try {
+        const id = req.params.id;
+
+        const data = await dbDeleteProduct( id );
+
+        res.json({
+            msg: 'Elimina un producto',
+            data: data
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'ERROR: No pudo eliminar el producto'
+        });
+    }
 }
 
 
