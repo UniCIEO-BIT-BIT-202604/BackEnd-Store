@@ -190,7 +190,51 @@ async function updateUser(req, res) {
     try {
         const { id } = req.params;
         const inputData = req.body;
+        const { email, nickname } = inputData;
 
+        // 1. Validar si el ID proporcionado es un ObjectId válido de MongoDB
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                msg: 'El ID proporcionado no tiene un formato válido de MongoDB'
+            });
+        }
+
+        // 2. Validar si el usuario existe físicamente en la base de datos
+        const existingUser = await dbGetUserByIdRaw(id);
+        if (!existingUser) {
+            return res.status(404).json({
+                msg: 'El usuario que deseas actualizar no existe en el sistema'
+            });
+        }
+
+        // 3. Proteger cuentas administrativas esenciales del sistema de modificaciones directas
+        if (existingUser.role === 'administrator') {
+            return res.status(403).json({
+                msg: 'Operación denegada: No está permitido modificar usuarios con rol de administrador'
+            });
+        }
+
+        // 4. Validar si el nuevo email ya está en uso por otro usuario
+        if (email) {
+            const userWithEmail = await dbGetUserByEmail(email);
+            if (userWithEmail && userWithEmail._id.toString() !== id) {
+                return res.status(400).json({
+                    msg: 'El correo electrónico ya se encuentra registrado por otro usuario'
+                });
+            }
+        }
+
+        // 5. Validar si el nuevo nickname ya está en uso por otro usuario
+        if (nickname) {
+            const userWithNickname = await dbGetUserByNickname(nickname);
+            if (userWithNickname && userWithNickname._id.toString() !== id) {
+                return res.status(400).json({
+                    msg: 'El nickname ya se encuentra en uso por otro usuario'
+                });
+            }
+        }
+
+        // Proceder a la actualización definitiva si todas las validaciones preventivas pasan
         const data = await dbUpdateUser(id, inputData);
 
         res.json({
