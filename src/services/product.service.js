@@ -13,11 +13,27 @@ const dbDeleteProduct = async ( id ) => {
     return await ProductModel.findOneAndDelete({ _id: id });
 }
 
+const dbUpdateProduct = async ( id, inputData ) => {
+    return await ProductModel.findByIdAndUpdate( 
+        id,                 // Objeto de consulta
+        inputData,           // El objeto con las propiedades y los valores que deseamos actualizar
+        { new: true }       // Configurar la respuesta
+    );
+    
+    return await ProductModel.findOneAndUpdate(
+        { _id: id },        // Objeto de consulta 
+        inputData,          // El objeto con las propiedades y los valores que deseamos actualizar
+        { new: true }       // Configurar la respuesta
+    );
+
+}
+
 
 
 export {
     dbCreateProduct,
     dbGetProducts,
-    dbDeleteProduct
+    dbDeleteProduct,
+    dbUpdateProduct
 }
 

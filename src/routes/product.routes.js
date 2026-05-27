@@ -6,7 +6,7 @@ const router = Router();
 // Define las rutas para la entidad 'Product'
 router.get( '/', getProducts );
 router.post( '/', createProduct );
-router.patch( '/', updateProduct );
+router.patch( '/:id', updateProduct );
 router.delete( '/:id', deleteProduct );
 
 

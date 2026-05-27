@@ -1,4 +1,5 @@
-import { dbCreateProduct, dbDeleteProduct, dbGetProducts } from "../services/product.service.js";
+import ProductModel from "../models/Product.model.js";
+import { dbCreateProduct, dbDeleteProduct, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async ( req, res ) => {
@@ -37,10 +38,24 @@ const getProducts = async ( req, res ) => {
     }
 }
 
-const updateProduct = ( req, res ) => {
-    res.json({
-        msg: 'Actualiza un producto'
-    });
+const updateProduct = async ( req, res ) => {
+    try {
+        const id = req.params.id;           // Id de la ruta para encontrar el documento que quiero actualizar
+        const inputData = req.body;         // Obteniendo el objeto con el/los parametro/s que quiero actualizar
+
+        const data = await dbUpdateProduct( id, inputData );
+
+        res.json({
+            msg: 'Actualiza un producto',
+            data: data
+        });
+    } catch (error) {
+        console.error( error );
+
+        res.status(500).json({
+            msg: 'Error: No pudo actualizar el producto por su ID'
+        });
+    }
 }
 
 const deleteProduct = async ( req, res ) => {
