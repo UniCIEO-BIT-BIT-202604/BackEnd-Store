@@ -6,12 +6,35 @@ async function getUsers(req, res) {
     try {
         const users = await dbGetUsers();
 
+        // ENFOQUE PREVENTIVO: Validar directamente si la lista está vacía y responder de inmediato
+        // if (users.length === 0) {
+        //     return res.status(404).json({
+        //         msg: 'No se encontraron usuarios registrados en el sistema'
+        //     });
+        // }
+
+
+        // ENFOQUE DE EXCEPCIONES: Lanzar una excepción de negocio si no hay usuarios activos registrados
+        if (users.length === 0) {
+            throw new Error('No se encontraron usuarios registrados en el sistema');
+        }
+
+
         res.json({
             data: users
         });
     } catch (error) {
         console.error(error);
 
+        // ENFOQUE DE EXCEPCIONES: Capturar error lanzado: Sin usuarios registrados
+        if (error.message.includes('No se encontraron usuarios registrados')) {
+            return res.status(404).json({
+                msg: error.message
+            });
+        }
+
+
+        // Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo obtener la lista de usuarios'
         });
