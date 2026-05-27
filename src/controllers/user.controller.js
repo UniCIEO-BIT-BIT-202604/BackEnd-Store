@@ -1,4 +1,6 @@
-import { dbGetUsers, dbGetUserById, dbGetUserByEmail, dbGetUserByNickname, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
+import { dbGetUsers, dbGetUserById, dbGetUserByIdRaw, dbGetUserByEmail, dbGetUserByNickname, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
+import { encryptPassword } from "../helpers/bcrypt.helper.js";
+import mongoose from "mongoose";
 
 async function getUsers(req, res) {
     try {
@@ -36,16 +38,23 @@ async function getUserById(req, res) {
 async function createUser(req, res) {
     try {
         const inputData = req.body;
-        const { email, nickname } = inputData;
+        const { email, nickname, password, confirmPassword } = inputData;
 
         /*
-        // ENFOQUE 2: Validación directa a nivel de Controlador (Descomentar para usar)
-        const { password, confirmPassword } = inputData;
+        // ENFOQUE 2: Validación directa de contraseñas coincidentes y encriptación en el Controlador
+        if (!password) {
+            return res.status(400).json({
+                msg: 'La contraseña es obligatoria'
+            });
+        }
         if (password !== confirmPassword) {
             return res.status(400).json({
                 msg: 'Las contraseñas no coinciden'
             });
         }
+
+        // Encriptar la contraseña usando el helper antes de persistir
+        inputData.password = await encryptPassword(password);
         */
 
         /*
@@ -96,6 +105,7 @@ async function createUser(req, res) {
                 email: 'El correo electrónico ya se encuentra registrado por otro usuario',
                 nickname: 'El nickname ya se encuentra en uso por otro usuario'
             };
+
             return res.status(400).json({
                 msg: errorMessages[duplicatedField] || 'Ya existe un registro con algunos de estos valores únicos'
             });
@@ -131,6 +141,31 @@ async function deleteUser(req, res) {
     try {
         const { id } = req.params;
 
+        // 1. Validar si el ID proporcionado es un ObjectId válido de MongoDB
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                msg: 'El ID proporcionado no tiene un formato válido de MongoDB'
+            });
+        }
+
+        // Obtener el usuario de la base de datos
+        const existingUser = await dbGetUserByIdRaw(id);
+
+        // 2. Validar si el usuario existe físicamente en la base de datos
+        if (!existingUser) {
+            return res.status(404).json({
+                msg: 'El usuario que deseas eliminar no existe en el sistema'
+            });
+        }
+
+        // 3. Proteger cuentas administrativas esenciales del sistema
+        if (existingUser.role === 'administrator') {
+            return res.status(403).json({
+                msg: 'Operación denegada: No está permitido eliminar usuarios con rol de administrador'
+            });
+        }
+
+        // 4. Proceder a la eliminación física definitiva
         const data = await dbDeleteUser(id);
 
         res.json({
@@ -140,6 +175,14 @@ async function deleteUser(req, res) {
     } catch (error) {
         console.error(error);
 
+        // A. Controlar errores de formato de parámetros (Casteo de Mongoose)
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                msg: 'El formato del ID de usuario provisto es inválido para la base de datos'
+            });
+        }
+
+        // B. Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo eliminar el usuario'
         });

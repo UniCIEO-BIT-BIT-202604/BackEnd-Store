@@ -9,6 +9,10 @@ const dbGetUserById = async (id) => {
     return await UserModel.findOne({ _id: id, status: true });
 };
 
+const dbGetUserByIdRaw = async (id) => {
+    return await UserModel.findById(id);
+};
+
 const dbGetUserByEmail = async (email) => {
     return await UserModel.findOne({ email: email.toLowerCase() });
 };
@@ -18,7 +22,21 @@ const dbGetUserByNickname = async (nickname) => {
 };
 
 const dbCreateUser = async (newUser) => {
-    return await UserModel.create(newUser);
+    // Registra el nuevo usuario en la base de datos (con su contraseña ya procesada por los hooks)
+    const data = await UserModel.create(newUser);
+
+    /*
+    // ENFOQUE MANUAL: Limpieza del password si NO existiera 'toJSON' en el modelo
+    // Convertimos el documento de Mongoose a un objeto plano de JavaScript (JS Object)
+    const userObject = data.toObject();
+    
+    // Eliminamos la propiedad password para que no viaje en el retorno del servicio ni sea expuesta
+    delete userObject.password;
+    
+    return userObject;
+    */
+
+    return data;
 };
 
 
@@ -41,6 +59,7 @@ const dbDeleteUser = async (id) => {
 export {
     dbGetUsers,
     dbGetUserById,
+    dbGetUserByIdRaw,
     dbGetUserByEmail,
     dbGetUserByNickname,
     dbCreateUser,

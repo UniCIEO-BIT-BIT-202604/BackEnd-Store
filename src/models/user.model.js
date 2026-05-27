@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { encryptPassword } from "../helpers/bcrypt.helper.js";
 
 const UserSchema = new Schema({
     name: {
@@ -52,28 +53,45 @@ const UserSchema = new Schema({
 
 // Campo virtual para confirmar la contraseña (no se almacena en la base de datos)
 UserSchema.virtual('confirmPassword')
-    .set(function(value) {
+    .set(function (value) {
         this._confirmPassword = value;
     })
-    .get(function() {
+    .get(function () {
         return this._confirmPassword;
     });
 
-// Hook de pre-validación para asegurar que las contraseñas coincidan
-UserSchema.pre('validate', function(next) {
+// Hook de pre-validación: se ejecuta justo antes de que Mongoose valide las reglas del Schema.
+// Al usar la sintaxis síncrona sin parámetros, evitamos problemas de compatibilidad con 'next'.
+UserSchema.pre('validate', function () {
+    // Verifica si la contraseña está siendo creada por primera vez o si ha sido modificada
     if (this.isModified('password')) {
+        // Valida si el campo virtual confirmPassword no fue enviado o está vacío en la petición
         if (!this.confirmPassword) {
+            // Marca el campo confirmPassword como inválido y le asocia un mensaje de error personalizado
             this.invalidate('confirmPassword', 'Debes confirmar la contraseña');
+        // Valida si el password real no es exactamente igual al confirmPassword virtual recibido
         } else if (this.password !== this.confirmPassword) {
+            // Si no coinciden, marca el campo confirmPassword como inválido con un mensaje de error
             this.invalidate('confirmPassword', 'Las contraseñas no coinciden');
         }
     }
-    next();
 });
 
-// Método para excluir la contraseña cuando se retorne el objeto de usuario en las respuestas JSON
-UserSchema.methods.toJSON = function() {
+// Hook de pre-save: se ejecuta justo antes de guardar o insertar físicamente el documento en MongoDB.
+// Al declarar la función como 'async' sin parámetros, Mongoose detecta automáticamente el retorno de la promesa sin requerir 'next'.
+UserSchema.pre('save', async function () {
+    // Si la contraseña no ha sufrido cambios (por ejemplo, si se actualiza otro campo del perfil), salta la encriptación
+    if (!this.isModified('password')) return;
+
+    // Encripta la contraseña en texto plano usando el helper asíncrono y reemplaza el valor original con el hash seguro
+    this.password = await encryptPassword(this.password);
+});
+
+// Método toJSON: se ejecuta automáticamente cada vez que Express/Node serializa el objeto de usuario a formato JSON en la respuesta
+UserSchema.methods.toJSON = function () {
+    // Convierte el documento de Mongoose a un objeto plano de JavaScript y extrae la contraseña de forma estructurada
     const { password, ...user } = this.toObject();
+    // Retorna el objeto del usuario limpio sin la propiedad de contraseña para que nunca se exponga al exterior
     return user;
 };
 
