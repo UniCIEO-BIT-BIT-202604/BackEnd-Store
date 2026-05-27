@@ -141,6 +141,10 @@ async function deleteUser(req, res) {
     try {
         const { id } = req.params;
 
+        /*
+        // =========================================================================
+        // ENFOQUE ANTERIOR: VALIDACIONES MANUALES DIRECTAS EN CONTROLADOR
+        // =========================================================================
         // 1. Validar si el ID proporcionado es un ObjectId válido de MongoDB
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({
@@ -164,8 +168,12 @@ async function deleteUser(req, res) {
                 msg: 'Operación denegada: No está permitido eliminar usuarios con rol de administrador'
             });
         }
+        // =========================================================================
+        */
 
-        // 4. Proceder a la eliminación física definitiva
+        // Proceder a la eliminación física definitiva
+        // Nota: Mongoose ejecutará automáticamente el hook 'pre-findOneAndDelete' del Modelo
+        // para validar la existencia física del usuario y la protección del rol de administrador.
         const data = await dbDeleteUser(id);
 
         res.json({
@@ -175,14 +183,28 @@ async function deleteUser(req, res) {
     } catch (error) {
         console.error(error);
 
-        // A. Controlar errores de formato de parámetros (Casteo de Mongoose)
+        // A. Capturar error lanzado por el Modelo: El usuario no existe en la BD
+        if (error.message.includes('El usuario que deseas eliminar no existe')) {
+            return res.status(404).json({
+                msg: error.message
+            });
+        }
+
+        // B. Capturar error lanzado por el Modelo: Protección del rol administrativo
+        if (error.message.includes('No está permitido eliminar usuarios con rol de administrador')) {
+            return res.status(403).json({
+                msg: error.message
+            });
+        }
+
+        // C. Controlar errores de formato de parámetros (Casteo de Mongoose)
         if (error.name === 'CastError') {
             return res.status(400).json({
                 msg: 'El formato del ID de usuario provisto es inválido para la base de datos'
             });
         }
 
-        // B. Error general interno del servidor
+        // D. Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo eliminar el usuario'
         });

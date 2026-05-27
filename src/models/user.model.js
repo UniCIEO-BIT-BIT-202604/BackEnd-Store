@@ -87,6 +87,26 @@ UserSchema.pre('save', async function () {
     this.password = await encryptPassword(this.password);
 });
 
+// Hook de pre-findOneAndDelete: intercepta la eliminación (findByIdAndDelete o findOneAndDelete) 
+// para validar existencia y denegar la eliminación de cuentas administrativas desde el Schema.
+UserSchema.pre('findOneAndDelete', async function () {
+    // Obtenemos el criterio de búsqueda (filtro) de la consulta actual (ej: { _id: id })
+    const query = this.getQuery();
+    
+    // Buscamos físicamente el documento en la base de datos antes de ejecutar la eliminación
+    const user = await this.model.findOne(query);
+    
+    // Si el documento ya no existe, arrojamos un error que viajará al catch del controlador
+    if (!user) {
+        throw new Error('El usuario que deseas eliminar no existe en el sistema');
+    }
+    
+    // Si el usuario es administrador, bloqueamos la eliminación arrojando un error
+    if (user.role === 'administrator') {
+        throw new Error('Operación denegada: No está permitido eliminar usuarios con rol de administrador');
+    }
+});
+
 // Método toJSON: se ejecuta automáticamente cada vez que Express/Node serializa el objeto de usuario a formato JSON en la respuesta
 UserSchema.methods.toJSON = function () {
     // Convierte el documento de Mongoose a un objeto plano de JavaScript y extrae la contraseña de forma estructurada
