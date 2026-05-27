@@ -11,7 +11,7 @@ const createCategory = async (req, res)=>{
     try {
         const inputData = req.body;
 
-        const data = await insertCategory(inputData);
+        const data = await deleteCategory(inputData);
 
         res.status(201).json({
             data : data

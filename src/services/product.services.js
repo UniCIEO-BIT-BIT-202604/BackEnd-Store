@@ -2,8 +2,12 @@ import ProductModel from "../models/product.model.js";
 
 
 
-const insertProducts =   async (newProduct)=>{
+const dbCreateProducts =   async (newProduct)=>{
     return await  ProductModel.create(newProduct);
 };
 
-export  {insertProducts}
+
+const dbGetProducts = async () =>{
+    return await ProductModel.find();
+}
+export  {dbCreateProducts , dbGetProducts}

@@ -1,10 +1,28 @@
-import { insertProducts } from "../services/product.services.js";
+
+import { dbCreateProducts, dbGetProducts,  } from "../services/product.services.js";
 
  
-const getProducts = ( req, res ) => {
-    res.json({
-        msg: 'Listar Productos'
+const getProducts =  async ( req, res ) => {
+  try {
+     const data = await dbGetProducts();
+       res.json({
+        msg: 'Listar Productos',
+
+        data : data,
     });
+  
+        res.status(201).json({
+            data : data
+        });
+
+  } catch (error) {
+    console.log(error); 
+
+        res.status(500).json({
+            msg: 'No se  pudo registrar el  listado de producto'
+        })
+    
+  }
 }
 
 
@@ -12,7 +30,7 @@ const createProduct = async (req, res) =>{
     try {
         const inputData = req.body;
 
-        const data = await insertProducts(inputData);
+        const data = await dbCreateProducts(inputData);
 
         res.status(201).json({
             data : data
@@ -36,8 +54,11 @@ const updateProduct = ( req, res ) => {
 }
 
 const deleteProduct = ( req, res ) => {
+       
+    const id  = req.params.id
     res.json({
-        msg: 'Elimina un producto'
+        msg: 'Elimina un producto',
+        id: id
     });
 }
 
