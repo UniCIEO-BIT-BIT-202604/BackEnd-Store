@@ -9,6 +9,14 @@ const dbGetUserById = async (id) => {
     return await UserModel.findOne({ _id: id, status: true });
 };
 
+const dbGetUserByEmail = async (email) => {
+    return await UserModel.findOne({ email: email.toLowerCase() });
+};
+
+const dbGetUserByNickname = async (nickname) => {
+    return await UserModel.findOne({ nickname: nickname.toLowerCase() });
+};
+
 const dbCreateUser = async (newUser) => {
     return await UserModel.create(newUser);
 };
@@ -33,6 +41,8 @@ const dbDeleteUser = async (id) => {
 export {
     dbGetUsers,
     dbGetUserById,
+    dbGetUserByEmail,
+    dbGetUserByNickname,
     dbCreateUser,
     dbUpdateUser,
     dbDeleteUser

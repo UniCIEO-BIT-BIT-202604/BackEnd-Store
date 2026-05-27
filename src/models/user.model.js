@@ -4,14 +4,20 @@ const UserSchema = new Schema({
     name: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
-        trim: true
+        trim: true,
+        match: [/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'El nombre solo puede contener letras y espacios'],
+        minlength: [2, 'El nombre debe tener al menos 2 caracteres'],
+        maxlength: [50, 'El nombre no puede exceder los 50 caracteres']
     },
     nickname: {
         type: String,
         required: [true, 'El nickname es obligatorio'],
         unique: true,
         lowercase: true,
-        trim: true
+        trim: true,
+        match: [/^[a-zA-Z0-9]+$/, 'El nickname solo puede contener caracteres alfanuméricos (sin espacios ni caracteres especiales)'],
+        minlength: [3, 'El nickname debe tener al menos 3 caracteres'],
+        maxlength: [20, 'El nickname no puede exceder los 20 caracteres']
     },
     email: {
         type: String,
@@ -42,6 +48,27 @@ const UserSchema = new Schema({
 }, {
     versionKey: false,
     timestamps: true
+});
+
+// Campo virtual para confirmar la contraseña (no se almacena en la base de datos)
+UserSchema.virtual('confirmPassword')
+    .set(function(value) {
+        this._confirmPassword = value;
+    })
+    .get(function() {
+        return this._confirmPassword;
+    });
+
+// Hook de pre-validación para asegurar que las contraseñas coincidan
+UserSchema.pre('validate', function(next) {
+    if (this.isModified('password')) {
+        if (!this.confirmPassword) {
+            this.invalidate('confirmPassword', 'Debes confirmar la contraseña');
+        } else if (this.password !== this.confirmPassword) {
+            this.invalidate('confirmPassword', 'Las contraseñas no coinciden');
+        }
+    }
+    next();
 });
 
 // Método para excluir la contraseña cuando se retorne el objeto de usuario en las respuestas JSON
