@@ -5,6 +5,10 @@ const dbGetUsers = async () => {
     return await UserModel.find({ status: true });
 };
 
+const dbGetUserById = async (id) => {
+    return await UserModel.findOne({ _id: id, status: true });
+};
+
 const dbCreateUser = async (newUser) => {
     return await UserModel.create(newUser);
 };
@@ -28,6 +32,7 @@ const dbDeleteUser = async (id) => {
 
 export {
     dbGetUsers,
+    dbGetUserById,
     dbCreateUser,
     dbUpdateUser,
     dbDeleteUser

@@ -1,4 +1,4 @@
-import { dbGetUsers, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
+import { dbGetUsers, dbGetUserById, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
 
 async function getUsers(req, res) {
     try {
@@ -12,6 +12,23 @@ async function getUsers(req, res) {
 
         res.status(500).json({
             msg: 'No se pudo obtener la lista de usuarios'
+        });
+    }
+}
+
+async function getUserById(req, res) {
+    try {
+        const { id } = req.params;
+        const data = await dbGetUserById(id);
+
+        res.json({
+            data: data
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'No se pudo obtener el usuario'
         });
     }
 }
@@ -74,6 +91,7 @@ async function deleteUser(req, res) {
 
 export {
     getUsers,
+    getUserById,
     createUser,
     updateUser,
     deleteUser
