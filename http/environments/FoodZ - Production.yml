@@ -1,0 +1,6 @@
+name: FoodZ - Production
+variables:
+  - name: BASE_URL
+    value: http://ec2-3-15-37-114.us-east-2.compute.amazonaws.com:3000
+  - name: BASE_URL_V1
+    value: "{{BASE_URL}}/api/v1"

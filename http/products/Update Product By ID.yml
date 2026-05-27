@@ -1,0 +1,22 @@
+info:
+  name: Update Product By ID
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: http://localhost:3000/products/6a150878b4b5e56736a1d850
+  body:
+    type: json
+    data: |-
+      {
+        "name": "MacBook Pro M5",
+        "price": 1800
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
