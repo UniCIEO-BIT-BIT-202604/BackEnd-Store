@@ -1,33 +1,76 @@
-function getUsers ( req, res ) {
-    res.json({
-        msg: 'Listar todos los usuarios'
-    });
+import { dbGetUsers, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
+
+async function getUsers(req, res) {
+    try {
+        const users = await dbGetUsers();
+
+        res.json({
+            data: users
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'No se pudo obtener la lista de usuarios'
+        });
+    }
 }
 
-function createUser( req, res ) {
-    res.json({
-        msg: 'Crea un usuario'
-    });
+async function createUser(req, res) {
+    try {
+        const inputData = req.body;
+
+        const data = await dbCreateUser(inputData);
+
+        res.status(201).json({
+            data: data
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'No se pudo registrar el usuario'
+        });
+    }
 }
 
+async function updateUser(req, res) {
+    try {
+        const { id } = req.params;
+        const inputData = req.body;
 
+        const data = await dbUpdateUser(id, inputData);
 
+        res.json({
+            data: data
+        });
+    } catch (error) {
+        console.error(error);
 
-
-
-
-function updateUser( req, res ) {
-    res.json({
-        msg: 'Actualiza un usuario'
-    });
+        res.status(500).json({
+            msg: 'No se pudo actualizar el usuario'
+        });
+    }
 }
 
-function deleteUser( req, res ) {
-    res.json({
-        msg: 'Elimina un usuario'
-    });
-}
+async function deleteUser(req, res) {
+    try {
+        const { id } = req.params;
 
+        const data = await dbDeleteUser(id);
+
+        res.json({
+            msg: 'Usuario eliminado exitosamente',
+            data: data
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'No se pudo eliminar el usuario'
+        });
+    }
+}
 
 export {
     getUsers,
