@@ -1,5 +1,5 @@
 import ProductModel from "../models/Product.model.js";
-import { dbCreateProduct, dbDeleteProduct, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
+import { dbCreateProduct, dbDeleteProduct, dbGetProductById, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async ( req, res ) => {
@@ -36,6 +36,26 @@ const getProducts = async ( req, res ) => {
             msg: 'ERROR: No pudo obtener los productos'
         });
     }
+}
+
+const getProductById = async ( req, res ) => {
+    try {
+        const id = req.params.id;
+
+        const data = await dbGetProductById( id );
+
+        res.json({
+            msg: 'Obtiene un producto por ID',
+            data: data
+        });
+    } catch (error) {
+        console.error( error );
+
+        res.status(500).json({
+            msg: 'Error: No pudo obtener producto por ID'
+        });
+    }
+
 }
 
 const updateProduct = async ( req, res ) => {
@@ -81,6 +101,7 @@ const deleteProduct = async ( req, res ) => {
 export {
     createProduct,
     getProducts,
+    getProductById,
     updateProduct,
     deleteProduct
 };

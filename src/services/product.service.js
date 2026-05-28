@@ -8,6 +8,10 @@ const dbGetProducts = async () => {
     return await ProductModel.find();
 }
 
+const dbGetProductById = async ( id ) => {
+    return await ProductModel.findOne({ _id: id });
+}
+
 const dbDeleteProduct = async ( id ) => {
     return await ProductModel.findByIdAndDelete( id );
     return await ProductModel.findOneAndDelete({ _id: id });
@@ -29,10 +33,10 @@ const dbUpdateProduct = async ( id, inputData ) => {
 }
 
 
-
 export {
     dbCreateProduct,
     dbGetProducts,
+    dbGetProductById,
     dbDeleteProduct,
     dbUpdateProduct
 }
