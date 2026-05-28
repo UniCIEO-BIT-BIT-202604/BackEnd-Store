@@ -51,6 +51,12 @@ const getProductById = async ( req, res ) => {
         }
 
         const data = await dbGetProductById( id );
+        // Validacion Directa al resultado de la consulta
+        if( ! data ) {
+            return res.json({
+                msg: 'No se puede obtener un producto que no se encuentra registrado'
+            });
+        }
 
         res.json({
             msg: 'Obtiene un producto por ID',
@@ -74,6 +80,11 @@ const updateProduct = async ( req, res ) => {
         const inputData = req.body;         // Obteniendo el objeto con el/los parametro/s que quiero actualizar
 
         const data = await dbUpdateProduct( id, inputData );
+        // Creo una Exception "falsa"
+        if( ! data ) {
+            // Induce un Error (Crea una Exception)
+            throw new Error( 'No se pudo actualizar el producto, por que no se encuentra registrado' );
+        }
 
         res.json({
             msg: 'Actualiza un producto',
@@ -86,6 +97,12 @@ const updateProduct = async ( req, res ) => {
         if( error.name === 'CastError' ) {
             return res.status(400).json({
                 msg: 'No se pudo actualizar el producto, por que el ID es invalido'
+            });
+        }
+
+        if( error.message.includes( 'No se pudo actualizar el producto, por que no se encuentra registrado' ) ) {
+            return res.json({
+                msg: error.message
             });
         }
 
@@ -107,6 +124,12 @@ const deleteProduct = async ( req, res ) => {
         }
 
         const data = await dbDeleteProduct( id );
+        // Validacion Directa al resultado de la consulta
+        if( ! data ) {
+            return res.json({
+                msg: 'No se puede eliminar un producto que no se encuentra registrado'
+            });
+        }
 
         res.json({
             msg: 'Elimina un producto',
