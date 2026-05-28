@@ -1,4 +1,5 @@
-import ProductModel from "../models/Product.model.js";
+import mongoose from "mongoose";
+
 import { dbCreateProduct, dbDeleteProduct, dbGetProductById, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
@@ -42,6 +43,13 @@ const getProductById = async ( req, res ) => {
     try {
         const id = req.params.id;
 
+        // Validacion Defensiva: Condicionamos previo a que ocurra el error (Nunca ocurre)
+        if( ! mongoose.Types.ObjectId.isValid( id ) ) {
+            return res.status(400).json({
+                msg: 'No se puede obtener producto por que el ID proporcionado es invalido'
+            });
+        }
+
         const data = await dbGetProductById( id );
 
         res.json({
@@ -50,6 +58,8 @@ const getProductById = async ( req, res ) => {
         });
     } catch (error) {
         console.error( error );
+
+        //
 
         res.status(500).json({
             msg: 'Error: No pudo obtener producto por ID'
@@ -72,6 +82,13 @@ const updateProduct = async ( req, res ) => {
     } catch (error) {
         console.error( error );
 
+        // Validacion Exception: Manejar cuando ocurre el error
+        if( error.name === 'CastError' ) {
+            return res.status(400).json({
+                msg: 'No se pudo actualizar el producto, por que el ID es invalido'
+            });
+        }
+
         res.status(500).json({
             msg: 'Error: No pudo actualizar el producto por su ID'
         });
@@ -81,6 +98,13 @@ const updateProduct = async ( req, res ) => {
 const deleteProduct = async ( req, res ) => {
     try {
         const id = req.params.id;
+
+        // Validacion Defensiva: Condicionamos previo a que ocurra el error (Nunca ocurre)
+        if( ! mongoose.Types.ObjectId.isValid( id ) ) {
+            return res.status(400).json({
+                msg: 'No se puede eliminar, por que el ID proporcionado es invalido'
+            });
+        }
 
         const data = await dbDeleteProduct( id );
 
