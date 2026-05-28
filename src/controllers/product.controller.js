@@ -30,6 +30,20 @@ const createProduct = async (req, res) => {
             });
         }
 
+        // Validamos errores de validación de Mongoose (Schema Validation)
+        if (error.name === 'ValidationError') {
+            const errorDetails = {};
+
+            Object.entries(error.errors).forEach(([field, errObj]) => {
+                errorDetails[field] = errObj.message;
+            });
+
+            return res.status(400).json({
+                msg: `Error de validacion en propiedades del producto`,
+                errors: errorDetails
+            });
+        }
+
         res.status(500).json({
             msg: 'Error: No se pudo crear el producto'
         });
@@ -117,6 +131,20 @@ const updateProduct = async (req, res) => {
 
             return res.status(400).json({
                 msg: `Error de validacion por duplicidad en propiedades unicas`,
+                errors: errorDetails
+            });
+        }
+
+        // Validamos errores de validación de Mongoose (Schema Validation)
+        if (error.name === 'ValidationError') {
+            const errorDetails = {};
+
+            Object.entries(error.errors).forEach(([field, errObj]) => {
+                errorDetails[field] = errObj.message;
+            });
+
+            return res.status(400).json({
+                msg: `Error de validacion en propiedades del producto`,
                 errors: errorDetails
             });
         }
