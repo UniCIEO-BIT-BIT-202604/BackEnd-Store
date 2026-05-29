@@ -34,6 +34,8 @@ const createProduct = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errorDetails = {};
 
+            console.log(' error.errors', error.errors);
+
             Object.entries(error.errors).forEach(([field, errObj]) => {
                 errorDetails[field] = errObj.message;
             });
