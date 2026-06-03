@@ -1,6 +1,6 @@
+import { encryptedPassword } from "../helpers/bcrypt.helper.js";
+
 import { dbGetUsers, dbGetUserById, dbGetUserByIdRaw, dbGetUserByEmail, dbGetUserByNickname, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
-import { encryptPassword } from "../helpers/bcrypt.helper.js";
-import mongoose from "mongoose";
 
 async function getUsers(req, res) {
     try {
@@ -106,46 +106,8 @@ async function getUserById(req, res) {
 async function createUser(req, res) {
     try {
         const inputData = req.body;
-        const { email, nickname, password, confirmPassword } = inputData;
 
-        /*
-        // ENFOQUE 2: Validación directa de contraseñas coincidentes y encriptación en el Controlador
-        if (!password) {
-            return res.status(400).json({
-                msg: 'La contraseña es obligatoria'
-            });
-        }
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                msg: 'Las contraseñas no coinciden'
-            });
-        }
-
-        // Encriptar la contraseña usando el helper antes de persistir
-        inputData.password = await encryptPassword(password);
-        */
-
-        /*
-        // 1. Validar si el email ya existe en la base de datos
-        if (email) {
-            const existingEmail = await dbGetUserByEmail(email);
-            if (existingEmail) {
-                return res.status(400).json({
-                    msg: 'El correo electrónico ya se encuentra registrado por otro usuario'
-                });
-            }
-        }
-
-        // 2. Validar si el nickname ya existe en la base de datos
-        if (nickname) {
-            const existingNickname = await dbGetUserByNickname(nickname);
-            if (existingNickname) {
-                return res.status(400).json({
-                    msg: 'El nickname ya se encuentra en uso por otro usuario'
-                });
-            }
-        }
-        */
+        inputData.password = encryptedPassword( inputData.password );
 
         const data = await dbCreateUser(inputData);
 

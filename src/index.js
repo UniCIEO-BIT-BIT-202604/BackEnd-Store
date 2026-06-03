@@ -1,8 +1,10 @@
-import express from 'express';
+import express, { application } from 'express';
+
 import dbConection from './config/mongo.config.js';
 import userRoutes from './routes/user.routes.js';
-import productRouter from './routes/product.routes.js';
-import categoryRouter from './routes/category.routes.js';
+import productRoutes from './routes/product.routes.js';
+import categoryRoutes from './routes/category.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 
@@ -22,9 +24,10 @@ app.get( '/health', ( req, res ) => {
 } );
 
 // Endpoints agrupados por entidad
-app.use( '/users', userRoutes );
-app.use ('/products', productRouter);
-app.use('/category', categoryRouter);
+app.use( '/api/users', userRoutes );
+app.use ('/api/products', productRoutes);
+app.use('/api/category', categoryRoutes);
+app.use( '/api/auth', authRoutes );
 
 // Lanzo el servidor web
 app.listen( 3000, () => {
