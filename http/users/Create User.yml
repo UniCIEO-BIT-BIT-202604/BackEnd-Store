@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:3000/users
+  url: http://localhost:3000/api/users
   body:
     type: json
     data: |
@@ -13,8 +13,8 @@ http:
         "name": "Juan Perez G",
         "nickname": "juanito99",
         "email": "juanito.perez@example.com",
-        "password": "PasswordSegura123",
-        "confirmPassword": "PasswordSegura1234",
+        "password": "123456789",
+        "confirmPassword": "123456789",
         "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=Juan%20Perez"
       }
   auth: inherit

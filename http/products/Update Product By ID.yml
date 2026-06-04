@@ -5,7 +5,7 @@ info:
 
 http:
   method: PATCH
-  url: http://localhost:3000/products/6a150878b4b5e56736a1d850
+  url: http://localhost:3000/api/products/6a150878b4b5e56736a1d850
   body:
     type: json
     data: |-

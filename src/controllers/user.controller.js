@@ -107,7 +107,7 @@ async function createUser(req, res) {
     try {
         const inputData = req.body;
 
-        inputData.password = encryptedPassword( inputData.password );
+        inputData.password = encryptedPassword(inputData.password);
 
         const data = await dbCreateUser(inputData);
 
@@ -117,7 +117,14 @@ async function createUser(req, res) {
     } catch (error) {
         console.error(error);
 
-        // A. Controlar errores de validación de campos de Mongoose (Reglas del Schema)
+        // A. Capturar error lanzado: Propiedad password omitida
+        if (error.message.includes('Se olvidó pasar la propiedad password')) {
+            return res.status(400).json({
+                msg: error.message
+            });
+        }
+
+        // B. Controlar errores de validación de campos de Mongoose (Reglas del Schema)
         if (error.name === 'ValidationError') {
             const messages = Object.values(error.errors).map(err => err.message);
 
@@ -127,7 +134,7 @@ async function createUser(req, res) {
             });
         }
 
-        // B. Controlar errores de índices únicos de MongoDB (Código 11000)
+        // C. Controlar errores de índices únicos de MongoDB (Código 11000)
         if (error.code === 11000) {
             const duplicatedField = Object.keys(error.keyValue)[0];
 
@@ -141,7 +148,7 @@ async function createUser(req, res) {
             });
         }
 
-        // C. Error general interno del servidor
+        // D. Error general interno del servidor
         res.status(500).json({
             msg: 'No se pudo registrar el usuario'
         });

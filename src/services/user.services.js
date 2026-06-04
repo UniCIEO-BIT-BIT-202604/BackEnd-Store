@@ -14,6 +14,10 @@ const dbGetUserByIdRaw = async (id) => {
 };
 
 const dbGetUserByEmail = async (email) => {
+    if (!email) {
+        throw new Error('Se olvidó pasar la propiedad email en el login');
+    }
+
     return await UserModel.findOne({ email: email.toLowerCase() });
 };
 

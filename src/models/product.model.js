@@ -7,8 +7,6 @@ const ProductSchema = new Schema({
         // minLength: 12,
         trim: true
     },
-
-    
     description: String,
     price: {
         type: Number,
@@ -24,14 +22,14 @@ const ProductSchema = new Schema({
         type: Boolean,
         default: true
     }
-},{
+}, {
     versionKey: false,
     timestamps: true
 });
 
 
 
-const ProductModel = model( 
+const ProductModel = model(
     'product',          // Define el nombre de la coleccion que almacenara el objeto creado con este Schema 
     ProductSchema       // Asocia la estructura de datos 2a la coleccion 
 );
