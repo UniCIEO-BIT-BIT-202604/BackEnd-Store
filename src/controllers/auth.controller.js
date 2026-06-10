@@ -7,9 +7,9 @@ const loginUser = async (req, res) => {
         // Paso 1: Extraer los datos del cuerpo de la peticion
         const inputData = req.body;     // { email: '', password: ''}
 
-        if (!inputData.email) {
-            throw new Error('Se olvidó pasar la propiedad email en el login');
-        }
+        // if (!inputData.email) {
+        //     throw new Error('Se olvidó pasar la propiedad email en el login');
+        // }
 
         if (!inputData.password) {
             throw new Error('Se olvidó pasar la propiedad password en el login');
@@ -33,8 +33,11 @@ const loginUser = async (req, res) => {
         const payload = {
             _id: userFound._id,
             name: userFound.name,
+            nickname: userFound.nickname,
             email: userFound.email,
             role: userFound.role,
+            avatar: userFound.avatar,
+            status: userFound.status
         };
 
         const token = generateToken(payload);
@@ -82,7 +85,22 @@ const loginUser = async (req, res) => {
     }
 }
 
+const reNewToken = ( req, res ) => {
+
+    const payload = req.payload;
+    const user = req.user;
+
+    // Creacion del nuevo Token
+
+    res.json({
+        msg: 'Aqui se renueva el Token',
+        payload,
+        user
+    });
+}
+
 
 export {
-    loginUser
+    loginUser,
+    reNewToken
 };

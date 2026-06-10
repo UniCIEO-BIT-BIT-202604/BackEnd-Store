@@ -18,5 +18,23 @@ const generateToken = ( payload ) => {
     }
 }
 
+const verifyToken = ( token ) => {
+    try {
+        const payload = jwt.verify(
+            token,                  // Token 
+            'erttyhrefwdefgthm',    // Semilla, Palabra Secreta
+        );
 
-export { generateToken };
+        return payload;
+    } catch (error) {
+        console.error( error );
+
+        return null;
+    }
+}
+
+
+export { 
+    generateToken,
+    verifyToken
+};
