@@ -46,7 +46,7 @@ const authenticationUser = async ( req, res, next ) => {
     delete userFoundObj.createdAt;
     delete userFoundObj.updatedAt;
 
-    console.log( 'Yo soy Middleware ', userFoundObj );
+    // console.log( 'Yo soy Middleware ', userFoundObj );
 
     // Paso 6: Creo las propiedades que almacenaran los datos que quiero pasar a la siguiente funcion (que pueden ser: otro middleware o el controller)
     req.payload = userFoundObj;

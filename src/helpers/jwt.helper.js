@@ -18,7 +18,7 @@ const generateToken = ( payload ) => {
     }
 }
 
-const verifyToken = ( token ) => {
+const verifyToken = ( token ) => {  
     try {
         const payload = jwt.verify(
             token,                  // Token 

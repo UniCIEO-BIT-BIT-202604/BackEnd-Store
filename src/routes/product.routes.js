@@ -5,10 +5,10 @@ const productRouter = Router();
 
 
 
-productRouter.get('/', getProducts);
-productRouter.post('/', createProduct);
-productRouter.patch( '/', updateProduct );
-productRouter.delete( '/', deleteProduct );
+productRouter.get('/',  getProducts);
+productRouter.post('/', authenticationUser, createProduct);
+productRouter.patch( '/', authenticationUser, updateProduct );
+productRouter.delete( '/', authenticationUser, deleteProduct );
 
 
 export default productRouter;

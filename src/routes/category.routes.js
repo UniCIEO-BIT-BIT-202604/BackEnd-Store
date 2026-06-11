@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { createCategory, deleteCategory, getCategory, updateCategory } from "../controllers/category.controller.js";
+import authenticationUser from "../middlewares/authentication.middleware.js";
 
 const categoryRouter = Router();
 
 
-categoryRouter.get('/', getCategory);
-categoryRouter.post('/', createCategory);
-categoryRouter.patch('/', updateCategory);
-categoryRouter.delete('/', deleteCategory);
+categoryRouter.get('/',  getCategory);
+categoryRouter.post('/', authenticationUser, createCategory);
+categoryRouter.patch('/', authenticationUser, updateCategory);
+categoryRouter.delete('/', authenticationUser, deleteCategory);
 
 
 

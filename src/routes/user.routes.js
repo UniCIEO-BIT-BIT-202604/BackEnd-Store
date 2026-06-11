@@ -6,11 +6,11 @@ import { getUsers, getUserById, createUser, updateUser, deleteUser } from '../co
 
 
 // Definicion de las rutas para los usuarios (ADMIN)
-router.get('/', getUsers);
-router.get('/:id', getUserById);
-router.post('/', createUser);           // http://localhost:3000/api/users
-router.patch('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.get('/', authenticationUser, getUsers);
+router.get('/:id', authenticationUser, getUserById);
+router.post('/', authenticationUser, createUser);           // http://localhost:3000/api/users
+router.patch('/:id', authenticationUser, updateUser);
+router.delete('/:id', authenticationUser, deleteUser);
 
 
 export default router;

@@ -1,0 +1,27 @@
+info:
+  name: Create Category
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/categories
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTIyMGFlZDI5NGZkZTQ5OGUzMTliNmQiLCJuYW1lIjoiTWFudWVsYSBHb21leiIsIm5pY2tuYW1lIjoibWFudWdvbWV6IiwiZW1haWwiOiJtZ29tZXpAY29ycmVvLmNvIiwicm9sZSI6InN1YnNjcmliZXIiLCJhdmF0YXIiOiJodHRwczovL2FwaS5kaWNlYmVhci5jb20vNy54L2luaXRpYWxzL3N2Zz9zZWVkPUp1YW4lMjBQZXJleiIsInN0YXR1cyI6dHJ1ZSwiaWF0IjoxNzgxMTM5NDYwLCJleHAiOjE3ODExNDMwNjB9.rtgVOEOz2MB8U0fFvyLFtSIt9oK4BM1g9W0D1Ew9_6w
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Carteras fibra natural",
+        "description": "Todas las carteras hechas en materiales basados fibras naturales",
+        "urlImage": "",
+        "status": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

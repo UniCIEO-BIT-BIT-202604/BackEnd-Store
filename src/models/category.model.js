@@ -13,7 +13,7 @@ const CategorySchema = new Schema({
         default : ''
     },
 
-    Image : {
+    urlImage : {
         type : String,
         default : ''
     },
@@ -21,6 +21,11 @@ const CategorySchema = new Schema({
     status : {
         type : Boolean,
         default  : true
+    },
+
+    createdBy: {
+        type: Schema.Types.ObjectId, 
+        ref: 'user'
     }
 },{
     versionKey : false,

@@ -10,6 +10,10 @@ const getCategory = (req, res)=>{
 const createCategory = async (req, res)=>{
     try {
         const inputData = req.body;
+        const { _id } = req.payload;
+    
+
+        inputData.createdBy = _id;       // Asignando automaticamente el id del usuario que se encuentra logueado
 
         const data = await insertCategory(inputData);
 

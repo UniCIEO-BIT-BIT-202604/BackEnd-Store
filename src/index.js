@@ -26,7 +26,7 @@ app.get( '/health', ( req, res ) => {
 // Endpoints agrupados por entidad
 app.use( '/api/users', userRoutes );
 app.use ('/api/products', productRoutes);
-app.use('/api/category', categoryRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use( '/api/auth', authRoutes );
 
 // Lanzo el servidor web
