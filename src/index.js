@@ -7,6 +7,7 @@ import categoryRoutes from './routes/category.routes.js';
 import authRoutes from './routes/auth.routes.js';
 
 const app = express();
+const PORT = process.env.PORT || 3001;
 
 // Conexion a la base de datos
 dbConection();
@@ -30,6 +31,6 @@ app.use('/api/categories', categoryRoutes);
 app.use( '/api/auth', authRoutes );
 
 // Lanzo el servidor web
-app.listen( 3000, () => {
+app.listen( PORT, () => {
     console.log( `Server running on http://localhost:3000` );
 });
