@@ -5,14 +5,16 @@ const router = Router();
 import { getUsers, getUserById, createUser, updateUser, deleteUser } from '../controllers/user.controller.js';
 
 import authenticationUser from '../middlewares/authentication.middleware.js';
+import { authorizationUser } from '../middlewares/authorization.middleware.js';
+import { ROLES } from '../config/global.config.js';
 
 
 // Definicion de las rutas para los usuarios (ADMIN)
-router.get('/', authenticationUser, getUsers);
-router.get('/:id', authenticationUser, getUserById);
-router.post('/', authenticationUser, createUser);           // http://localhost:3000/api/users
-router.patch('/:id', authenticationUser, updateUser);
-router.delete('/:id', authenticationUser, deleteUser);
+router.get('/', [authenticationUser, authorizationUser([ ROLES.ADMIN ])], getUsers);
+router.get('/:id', [authenticationUser, authorizationUser([ ROLES.ADMIN ])], getUserById);
+router.post('/', authenticationUser, authorizationUser([ ROLES.ADMIN ]), createUser);           // http://localhost:3000/api/users
+router.patch('/:id', authenticationUser, authorizationUser([ ROLES.ADMIN ]), updateUser);
+router.delete('/:id', authenticationUser, authorizationUser([ ROLES.ADMIN ]), deleteUser);
 
 
 export default router;

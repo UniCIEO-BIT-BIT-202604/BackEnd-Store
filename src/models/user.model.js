@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { ALLOWED_ROLES, ROLES } from "../config/global.config.js";
 
 const UserSchema = new Schema({
     name: {
@@ -34,8 +35,8 @@ const UserSchema = new Schema({
     role: {
         type: String,
         required: true,
-        enum: ['administrator', 'editor', 'author', 'contributor', 'subscriber'],
-        default: 'subscriber'
+        enum: ALLOWED_ROLES,
+        default: ROLES.SUBSCRIBER
     },
     status: {
         type: Boolean,
