@@ -10,9 +10,13 @@ import { ROLES } from '../config/global.config.js';
 
 
 // Definicion de las rutas para los usuarios (ADMIN)
-router.get('/', [authenticationUser, authorizationUser([ ROLES.ADMIN ])], getUsers);
-router.get('/:id', [authenticationUser, authorizationUser([ ROLES.ADMIN ])], getUserById);
+router.get(
+    '/', 
+    // [authenticationUser, authorizationUser([ ROLES.ADMIN ])], 
+    getUsers
+);
 router.post('/', authenticationUser, authorizationUser([ ROLES.ADMIN ]), createUser);           // http://localhost:3000/api/users
+router.get('/:id', [authenticationUser, authorizationUser([ ROLES.ADMIN ])], getUserById);
 router.patch('/:id', authenticationUser, authorizationUser([ ROLES.ADMIN ]), updateUser);
 router.delete('/:id', authenticationUser, authorizationUser([ ROLES.ADMIN ]), deleteUser);
 

@@ -21,6 +21,7 @@ async function getUsers(req, res) {
 
 
         res.json({
+            msg: 'Lista de todos los usuarios',
             data: users
         });
     } catch (error) {
