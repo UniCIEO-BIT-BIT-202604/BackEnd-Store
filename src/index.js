@@ -10,16 +10,15 @@ import authRoutes from './routes/auth.routes.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+
 // Conexion a la base de datos
 dbConection();
 
-
-//middlewares
-app.use(express.json());
+// Middlewares
+app.use( express.json() );      // Habilita la interpretacion JSON
 app.use( cors(
     // { origin: 'http://localhost:4200' }
 ) );
-
 
 // Endpoint
 app.get( '/health', ( req, res ) => {
@@ -30,8 +29,8 @@ app.get( '/health', ( req, res ) => {
 
 // Endpoints agrupados por entidad
 app.use( '/api/users', userRoutes );
-app.use ('/api/products', productRoutes);
-app.use('/api/categories', categoryRoutes);
+app.use( '/api/products', productRoutes );
+app.use('/api/categories', categoryRoutes );
 app.use( '/api/auth', authRoutes );
 
 // Lanzo el servidor web
