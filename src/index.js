@@ -6,6 +6,7 @@ import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import roleRoutes from './routes/roles.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,8 +31,9 @@ app.get( '/health', ( req, res ) => {
 // Endpoints agrupados por entidad
 app.use( '/api/users', userRoutes );
 app.use( '/api/products', productRoutes );
-app.use('/api/categories', categoryRoutes );
+app.use( '/api/categories', categoryRoutes );
 app.use( '/api/auth', authRoutes );
+app.use( '/api/roles', roleRoutes );
 
 // Lanzo el servidor web
 app.listen( PORT, () => {
