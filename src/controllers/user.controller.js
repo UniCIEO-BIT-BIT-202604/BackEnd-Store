@@ -1,4 +1,5 @@
 import { encryptedPassword } from "../helpers/bcrypt.helper.js";
+import deleteOldImage from "../helpers/file-storage.js";
 
 import { dbGetUsers, dbGetUserById, dbGetUserByIdRaw, dbGetUserByEmail, dbGetUserByNickname, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
 
@@ -108,6 +109,12 @@ async function createUser(req, res) {
     try {
         const inputData = req.body;
 
+        // Si se subió un archivo, asignar su ruta a avatarUrl
+        if (req.file) {
+            inputData.avatarUrl = `/uploads/avatars/${req.file.filename}`;
+        }
+        // Si no se envía archivo, Mongoose aplicará automáticamente la imagen por defecto
+
         inputData.password = encryptedPassword(inputData.password);
 
         const data = await dbCreateUser(inputData);
@@ -138,6 +145,12 @@ async function createUser(req, res) {
 
         // C. Controlar errores de índices únicos de MongoDB (Código 11000)
         if (error.code === 11000) {
+
+            // Eliminar la imagen física del avatar usando el helper (si no era la por defecto)
+            if (req.file) {
+                await deleteOldImage(`/uploads/avatars/${req.file.filename}`);
+            }
+
             const duplicatedField = Object.keys(error.keyValue)[0];
 
             const errorMessages = {
@@ -225,6 +238,22 @@ async function updateUser(req, res) {
         //     throw new Error('Operación denegada: No está permitido modificar usuarios con rol de administrador');
         // }
 
+        // Si se subió una NUEVA imagen de avatar
+        if (req.file) {
+            // Eliminar la imagen previa del disco usando el helper (si no era la por defecto)
+            await deleteOldImage(existingUser.avatarUrl);
+
+            // Asignar la nueva ruta de avatar
+            inputData.avatarUrl = `/uploads/avatars/${req.file.filename}`;
+        }
+        // SI NO SUBIÓ ARCHIVO PERO SOLICITÓ REESTABLECER EL AVATAR (enviando avatarUrl vacío "")
+        else if (inputData.avatarUrl === '') {
+            // Eliminar la imagen previa personalizada del disco
+            await deleteOldImage(existingUser.avatarUrl);
+            // Reasignar a la imagen por defecto
+            inputData.avatarUrl = '/uploads/avatars/default-avatar.png';
+        }
+
         // Proceder a la actualización definitiva
         // Las validaciones de duplicados de Email/Nickname se resolverán mediante excepciones de índice único de MongoDB (11000)
         const data = await dbUpdateUser(id, inputData);
@@ -234,6 +263,11 @@ async function updateUser(req, res) {
         });
     } catch (error) {
         console.error(error);
+
+        // Eliminar la imagen física del avatar usando el helper (si no era la por defecto)
+        if (req.file) {
+            await deleteOldImage(`/uploads/avatars/${req.file.filename}`);
+        }
 
         // A. Capturar error de negocio: El usuario no existe en el sistema
         if (error.message.includes('El usuario que deseas actualizar no existe')) {
@@ -310,6 +344,17 @@ async function deleteUser(req, res) {
         }
         // =========================================================================
         */
+
+        // Proceder a buscar el usuario físicamente en la base de datos
+        // Si el formato del ID es inválido, Mongoose disparará automáticamente un CastError
+        const user = await dbGetUserByIdRaw(id);
+
+        if (!user) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+
+        // 2. Eliminar la imagen física del avatar usando el helper (si no era la por defecto)
+        await deleteOldImage(user.avatarUrl);
 
         // Proceder a la eliminación física definitiva
         // Nota: Mongoose ejecutará automáticamente el hook 'pre-findOneAndDelete' del Modelo

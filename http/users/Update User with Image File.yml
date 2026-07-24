@@ -1,0 +1,43 @@
+info:
+  name: Update User with Image File
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/users/6a63cc7279049f0a04ab0675
+  body:
+    type: multipart-form
+    data:
+      - name: name
+        type: text
+        value: Ana Maria
+        disabled: true
+      - name: email
+        type: text
+        value: acastro@correo.co
+        disabled: true
+      - name: nickname
+        type: text
+        value: acastro
+        disabled: true
+      - name: password
+        type: text
+        value: "#1Dos3456789"
+        disabled: true
+      - name: confirmPassword
+        type: text
+        value: "#1Dos3456789"
+        disabled: true
+      - name: avatarUrl
+        type: file
+        value:
+          - /home/jcarlosj/Pictures/pexels-mithulvarshan-2318990.jpg
+        contentType: image/jpeg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

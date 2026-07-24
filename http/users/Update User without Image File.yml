@@ -1,0 +1,27 @@
+info:
+  name: Update User without Image File
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/users/6a17077449790847fa32131b
+  body:
+    type: json
+    data: |
+      {
+        "name": "Juan C Jiménez G",
+        "nickname": "jcarlosj",
+        "email": "jangojes.dev@gmail.com",
+        "password": "123456789",
+      "confirmPassword": "diferentepassword",
+        "role": "administrator",
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

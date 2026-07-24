@@ -42,9 +42,9 @@ const UserSchema = new Schema({
         type: Boolean,
         default: true
     },
-    avatar: {
+    avatarUrl: {
         type: String,
-        default: ''
+        default: '/uploads/avatars/default-avatar.png'
     }
 }, {
     versionKey: false,

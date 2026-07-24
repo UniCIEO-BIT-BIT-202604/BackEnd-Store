@@ -1,11 +1,11 @@
 info:
-  name: Update User
+  name: Create User without Image File
   type: http
-  seq: 3
+  seq: 2
 
 http:
-  method: PATCH
-  url: http://localhost:3000/api/users/6a17077449790847fa32131b
+  method: POST
+  url: http://localhost:3000/api/users
   body:
     type: json
     data: |
