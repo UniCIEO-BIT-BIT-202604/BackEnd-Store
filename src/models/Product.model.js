@@ -26,9 +26,20 @@ const ProductSchema = new Schema({
         min: [1, 'Se requiere registrar minimo una unidad'],
         default: 1
     },
+    // Crea una asociacion con el modelo de categoria usando el ID de cualquiera de sus documentos registrados
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'category',
+        //required: [ true, 'Debe seleccionar el ID de una categoria' ]
+    },
     status: {
         type: Boolean,
         default: true
+    },
+    // Crea una asociancion con el modelo de usuarios usando el ID para registrar el usuario que crea el producto
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
     }
 
 }, {

@@ -113,6 +113,7 @@ async function createUser(req, res) {
         const data = await dbCreateUser(inputData);
 
         res.status(201).json({
+            msg: 'Registra el usuario de forma publica exitosamente',
             data: data
         });
     } catch (error) {
@@ -220,9 +221,9 @@ async function updateUser(req, res) {
         }
 
         // Lanzar una excepción si se intenta modificar un administrador de forma directa
-        if (existingUser.role === 'administrator') {
-            throw new Error('Operación denegada: No está permitido modificar usuarios con rol de administrador');
-        }
+        // if (existingUser.role === 'administrator') {
+        //     throw new Error('Operación denegada: No está permitido modificar usuarios con rol de administrador');
+        // }
 
         // Proceder a la actualización definitiva
         // Las validaciones de duplicados de Email/Nickname se resolverán mediante excepciones de índice único de MongoDB (11000)

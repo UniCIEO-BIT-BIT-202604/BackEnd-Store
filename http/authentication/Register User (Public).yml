@@ -6,6 +6,17 @@ info:
 http:
   method: POST
   url: http://localhost:3000/api/auth/register
+  body:
+    type: json
+    data: |
+      {
+        "name": "Juan Perez G",
+        "nickname": "juanito99",
+        "email": "juanito.perez@example.com",
+        "password": "123456789",
+        "confirmPassword": "123456789",
+        "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=Juan%20Perez"
+      }
   auth: inherit
 
 settings:

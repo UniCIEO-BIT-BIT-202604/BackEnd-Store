@@ -6,7 +6,9 @@ const categoryRouter = Router();
 
 
 categoryRouter.get('/',  getCategory);
-categoryRouter.post('/', authenticationUser, createCategory);
+categoryRouter.post('/', 
+    // [authenticationUser, authorizationUser([ ROLES.ADMIN ])],
+    createCategory);
 categoryRouter.patch('/', authenticationUser, updateCategory);
 categoryRouter.delete('/', authenticationUser, deleteCategory);
 

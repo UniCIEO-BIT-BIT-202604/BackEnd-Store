@@ -8,13 +8,13 @@ http:
   url: http://localhost:3000/api/categories
   headers:
     - name: X-Token
-      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTIyMGFlZDI5NGZkZTQ5OGUzMTliNmQiLCJuYW1lIjoiTWFudWVsYSBHb21leiIsIm5pY2tuYW1lIjoibWFudWdvbWV6IiwiZW1haWwiOiJtZ29tZXpAY29ycmVvLmNvIiwicm9sZSI6InN1YnNjcmliZXIiLCJhdmF0YXIiOiJodHRwczovL2FwaS5kaWNlYmVhci5jb20vNy54L2luaXRpYWxzL3N2Zz9zZWVkPUp1YW4lMjBQZXJleiIsInN0YXR1cyI6dHJ1ZSwiaWF0IjoxNzgxMTM5NDYwLCJleHAiOjE3ODExNDMwNjB9.rtgVOEOz2MB8U0fFvyLFtSIt9oK4BM1g9W0D1Ew9_6w
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTRkYWY2ODMzYzE0MDg2YzgwMzRlZDAiLCJuYW1lIjoiSnVhbiBQZXJleiBHIiwibmlja25hbWUiOiJqdWFuaXRvOTkiLCJlbWFpbCI6Imp1YW5pdG8ucGVyZXpAZXhhbXBsZS5jb20iLCJyb2xlIjoic3Vic2NyaWJlciIsImF2YXRhciI6Imh0dHBzOi8vYXBpLmRpY2ViZWFyLmNvbS83LngvaW5pdGlhbHMvc3ZnP3NlZWQ9SnVhbiUyMFBlcmV6Iiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODM0NzYxMDgsImV4cCI6MTc4MzQ3OTcwOH0.10mhYa16ZuJOA7QamwMoD3Nm8uNkieJ9uJb8Sx4DGhQ
   body:
     type: json
     data: |-
       {
-        "name": "Carteras fibra natural",
-        "description": "Todas las carteras hechas en materiales basados fibras naturales",
+        "name": "Mediterranea",
+        "description": "Todas platos mediterraneos",
         "urlImage": "",
         "status": true
       }

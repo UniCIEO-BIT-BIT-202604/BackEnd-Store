@@ -1,19 +1,29 @@
-import { insertCategory } from "../services/category.services.js";
+import { dbGetCategories, insertCategory } from "../services/category.services.js";
 
 
-const getCategory = (req, res)=>{
-    res.json({
-        msg: 'Listar Categorias'
-    })
+const getCategory = async (req, res)=>{
+    try {
+        const data = await dbGetCategories();
+
+        res.json({
+            msg: 'Listar Categorias',
+            data
+        })
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            msg: 'Error al obtener todas las categorias'
+        })
+    }
 }
 
 const createCategory = async (req, res)=>{
     try {
         const inputData = req.body;
-        const { _id } = req.payload;
+        // const { _id } = req.payload;
     
-
-        inputData.createdBy = _id;       // Asignando automaticamente el id del usuario que se encuentra logueado
+        // inputData.createdBy = _id;       // Asignando automaticamente el id del usuario que se encuentra logueado
 
         const data = await insertCategory(inputData);
 

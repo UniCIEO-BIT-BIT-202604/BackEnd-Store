@@ -5,10 +5,10 @@ import authenticationUser from "../middlewares/authentication.middleware.js";
 const productRouter = Router();
 
 productRouter.get('/',  getProducts);
-productRouter.post('/', authenticationUser, createProduct);
+productRouter.post('/', createProduct);
 productRouter.get( '/:id', getProductById  );
-productRouter.patch( '/', authenticationUser, updateProduct );
-productRouter.delete( '/', authenticationUser, deleteProduct );
+productRouter.patch( '/', updateProduct );
+productRouter.delete( '/', deleteProduct );
 
 
 export default productRouter;
