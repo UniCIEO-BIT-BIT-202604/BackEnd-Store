@@ -1,5 +1,5 @@
 info:
-  name: Create Product
+  name: Create Product without Image Files
   type: http
   seq: 2
 

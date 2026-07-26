@@ -1,11 +1,28 @@
 import mongoose from "mongoose";
 
 import { dbCreateProduct, dbDeleteProduct, dbGetProductById, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
+import { deleteMultipleImages, deleteOldImage } from "../helpers/file-storage.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async (req, res) => {
     try {
-        const inputData = req.body;
+        // 1. VALIDACIÓN: Verificar que vengan imágenes en req.files
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                msg: 'Error de validación en los datos del producto',
+                errors: { images: 'El producto debe incluir al menos una (1) imagen' }
+            });
+        }
+        // 2. CONSTRUIR ARREGLO DE IMÁGENES: Mapear req.files para MongoDB
+        const imageObjects = req.files.map((file, index) => ({
+            url: `/uploads/products/${file.filename}`,
+            isMain: index === 0 // La primera imagen será la principal por defecto
+        }));
+        // 3. MEZCLAR CON EL BODY: Agregar el arreglo 'images' al objeto inputData
+        const inputData = {
+            ...req.body,
+            images: imageObjects
+        };
 
         const data = await dbCreateProduct(inputData);
 
@@ -15,6 +32,12 @@ const createProduct = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
+
+        // 4. LIMPIEZA EN CASO DE ERROR: Si falla Mongoose o la BD, borrar los archivos subidos al disco
+        if (req.files && req.files.length > 0) {
+            const filePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+            await deleteMultipleImages(filePaths);
+        }
 
         // Validamos si la propiedad tiene un valor unico
         if (error.code === 11000) {
@@ -107,14 +130,82 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const id = req.params.id;           // Id de la ruta para encontrar el documento que quiero actualizar
-        const inputData = req.body;         // Obteniendo el objeto con el/los parametro/s que quiero actualizar
+        const inputData = { ...req.body };  // Copia del body recibido
 
-        const data = await dbUpdateProduct(id, inputData);
-        // Creo una Exception "falsa"
-        if (!data) {
-            // Induce un Error (Crea una Exception)
-            throw new Error('No se pudo actualizar el producto, por que no se encuentra registrado');
+        // 1. OBTENER PRODUCTO ACTUAL EN BD
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            if (req.files && req.files.length > 0) {
+                const filePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+                await deleteMultipleImages(filePaths);
+            }
+            return res.status(400).json({
+                msg: 'No se pudo actualizar el producto, por que el ID es invalido'
+            });
         }
+
+        const currentProduct = await dbGetProductById(id);
+        if (!currentProduct) {
+            if (req.files && req.files.length > 0) {
+                const filePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+                await deleteMultipleImages(filePaths);
+            }
+            return res.status(404).json({ msg: 'No se pudo actualizar el producto, por que no se encuentra registrado' });
+        }
+
+        let updatedImages = currentProduct.images.map(img => (typeof img.toObject === 'function' ? img.toObject() : { ...img }));
+
+        // 2. ELIMINAR UNA IMAGEN ESPECÍFICA (Si se recibe deleteImageUrl en el body)
+        if (inputData.deleteImageUrl) {
+            const targetDeleteUrl = inputData.deleteImageUrl.trim();
+            await deleteOldImage(targetDeleteUrl);
+            updatedImages = updatedImages.filter(img => img.url !== targetDeleteUrl);
+            delete inputData.deleteImageUrl;
+        }
+
+        // 3. AÑADIR NUEVAS IMÁGENES SUBIDAS (req.files)
+        if (req.files && req.files.length > 0) {
+            if (updatedImages.length + req.files.length > 9) {
+                const filePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+                await deleteMultipleImages(filePaths);
+                return res.status(400).json({
+                    msg: 'Error de validación en las imágenes',
+                    errors: { images: 'No se pueden asociar más de nueve (9) imágenes a un producto' }
+                });
+            }
+
+            const newImages = req.files.map(file => ({
+                url: `/uploads/products/${file.filename}`,
+                isMain: false
+            }));
+
+            updatedImages = [...updatedImages, ...newImages];
+        }
+
+        // 4. CAMBIAR IMAGEN PRINCIPAL (Si se recibe mainImageUrl en el body)
+        if (inputData.mainImageUrl) {
+            const targetMainUrl = inputData.mainImageUrl.trim();
+            const exists = updatedImages.some(img => img.url === targetMainUrl);
+            if (exists) {
+                updatedImages = updatedImages.map(img => ({
+                    ...img,
+                    isMain: img.url === targetMainUrl
+                }));
+            }
+            delete inputData.mainImageUrl;
+        }
+
+        // 5. ASEGURAR QUE AL MENOS UNA IMAGEN SEA LA PRINCIPAL (Si existen imágenes)
+        if (updatedImages.length > 0) {
+            const hasMain = updatedImages.some(img => img.isMain);
+            if (!hasMain) {
+                updatedImages[0].isMain = true;
+            }
+        }
+
+        inputData.images = updatedImages;
+
+        // 6. ACTUALIZAR EN BASE DE DATOS
+        const data = await dbUpdateProduct(id, inputData);
 
         res.json({
             msg: 'Actualiza un producto',
@@ -123,7 +214,13 @@ const updateProduct = async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        // Validacion Exception: Manejar cuando ocurre el error
+        // LIMPIEZA EN CASO DE ERROR
+        if (req.files && req.files.length > 0) {
+            const filePaths = req.files.map(file => `/uploads/products/${file.filename}`);
+            await deleteMultipleImages(filePaths);
+        }
+
+        // Validacion Exception
         if (error.code === 11000) {
             const errorDetails = {};
 
@@ -157,12 +254,6 @@ const updateProduct = async (req, res) => {
             });
         }
 
-        if (error.message.includes('No se pudo actualizar el producto, por que no se encuentra registrado')) {
-            return res.json({
-                msg: error.message
-            });
-        }
-
         res.status(500).json({
             msg: 'Error: No pudo actualizar el producto por su ID'
         });
@@ -186,6 +277,12 @@ const deleteProduct = async (req, res) => {
             return res.json({
                 msg: 'No se puede eliminar un producto que no se encuentra registrado'
             });
+        }
+
+        // ELIMINACIÓN EN CASCADA: Borrar todas las imágenes físicas del producto en el servidor
+        if (data.images && data.images.length > 0) {
+            const imagePaths = data.images.map(img => img.url);
+            await deleteMultipleImages(imagePaths);
         }
 
         res.json({

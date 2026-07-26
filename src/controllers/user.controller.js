@@ -1,5 +1,5 @@
 import { encryptedPassword } from "../helpers/bcrypt.helper.js";
-import deleteOldImage from "../helpers/file-storage.js";
+import { deleteOldImage } from "../helpers/file-storage.js";
 
 import { dbGetUsers, dbGetUserById, dbGetUserByIdRaw, dbGetUserByEmail, dbGetUserByNickname, dbCreateUser, dbUpdateUser, dbDeleteUser } from "../services/user.services.js";
 

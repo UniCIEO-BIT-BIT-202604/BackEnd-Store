@@ -1,5 +1,5 @@
 info:
-  name: Update User without Image File
+  name: Update User By ID without Image File
   type: http
   seq: 4
 

@@ -15,45 +15,60 @@ const ProductSchema = new Schema({
         trim: true,         // Modificador
         unique: true        // Regla
     },
-    description: String,
+    description: {
+        type: String,
+        trim: true,
+        maxlength: [500, 'La descripción no puede exceder los 500 caracteres']
+    },
     price: {
         type: Number,
-        min: [0, 'El precio no puede ser menor que cero'],
+        required: [true, 'El precio del producto es obligatorio'],
+        min: [0, 'El precio no puede ser un valor negativo'],
         default: 0
     },
     stock: {
         type: Number,
-        min: [1, 'Se requiere registrar minimo una unidad'],
+        required: [true, 'El stock del producto es obligatorio'],
+        min: [0, 'El stock no puede ser un valor negativo'],
         default: 1
-    },
-    // Crea una asociacion con el modelo de categoria usando el ID de cualquiera de sus documentos registrados
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'category',
-        //required: [ true, 'Debe seleccionar el ID de una categoria' ]
     },
     status: {
         type: Boolean,
         default: true
     },
-    // Crea una asociancion con el modelo de usuarios usando el ID para registrar el usuario que crea el producto
-    createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'user'
+    // Estructura para el arreglo de imágenes con validadores y mensajes de error personalizados
+    images: {
+        type: [{
+            url: {
+                type: String,
+                required: [true, 'La URL de la imagen es obligatoria']
+            },
+            isMain: {
+                type: Boolean,
+                default: false
+            }
+        }],
+        validate: [
+            {
+                validator: function (val) {
+                    // Al crear un producto, requerir al menos 1 imagen
+                    return Array.isArray(val) && val.length > 0;
+                },
+                message: 'El producto debe incluir al menos una (1) imagen'
+            },
+            {
+                validator: function (val) {
+                    // Restricción máxima de 9 imágenes
+                    return Array.isArray(val) && val.length <= 9;
+                },
+                message: 'No se pueden asociar más de nueve (9) imágenes a un producto'
+            }
+        ]
     }
-
 }, {
     versionKey: false,
-    timestamps: true    // createdAt/updatedAt
+    timestamps: true
 });
 
-// El modelo: Asociacion entre la estructura de datos y la coleccion donde voy a guardar esos datos
-const ProductModel = model(
-    'product',  // Define el nombre de la collection donde voy a guardar los Documentos
-    ProductSchema
-);
-
-
+const ProductModel = model('product', ProductSchema);
 export default ProductModel;
-
-

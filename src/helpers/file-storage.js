@@ -21,5 +21,11 @@ const deleteOldImage = async (imagePath) => {
     }
 };
 
+const deleteMultipleImages = async (imagePaths = []) => {
+    for (const imagePath of imagePaths) {
+        await deleteOldImage(imagePath);
+    }
+};
 
-export default deleteOldImage;
+
+export { deleteOldImage, deleteMultipleImages };

@@ -1,5 +1,5 @@
 info:
-  name: Delete User
+  name: Delete User By ID
   type: http
   seq: 6
 

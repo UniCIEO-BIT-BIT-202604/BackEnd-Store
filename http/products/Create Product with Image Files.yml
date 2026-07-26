@@ -1,0 +1,43 @@
+info:
+  name: Create Product with Image Files
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:3000/api/products
+  body:
+    type: multipart-form
+    data:
+      - name: referenceCode
+        type: text
+        value: TEC-0001
+      - name: name
+        type: text
+        value: Teclado Mecánico RGB Pro
+      - name: description
+        type: text
+        value: Teclado mecánico RGB con switches red actualizados y mayor precisión.
+      - name: price
+        type: text
+        value: "69.99"
+      - name: stock
+        type: text
+        value: "15"
+      - name: status
+        type: text
+        value: "true"
+      - name: images
+        type: file
+        value:
+          - /home/jcarlosj/Pictures/pexels-ilargian-faus-763704-1629780.jpg
+          - /home/jcarlosj/Pictures/pexels-jane-koplimae-12165036-10764979.jpg
+          - /home/jcarlosj/Pictures/pexels-marrinson-palacios-cosme-348545890-16744001.jpg
+        contentType: multipart/mixed
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
