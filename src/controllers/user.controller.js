@@ -111,7 +111,7 @@ async function createUser(req, res) {
 
         // Si se subió un archivo, asignar su ruta a avatarUrl
         if (req.file) {
-            inputData.avatarUrl = `/uploads/avatars/${req.file.filename}`;
+            inputData.avatarUrl = `uploads/avatars/${req.file.filename}`;
         }
         // Si no se envía archivo, Mongoose aplicará automáticamente la imagen por defecto
 
@@ -148,7 +148,7 @@ async function createUser(req, res) {
 
             // Eliminar la imagen física del avatar usando el helper (si no era la por defecto)
             if (req.file) {
-                await deleteOldImage(`/uploads/avatars/${req.file.filename}`);
+                await deleteOldImage(`uploads/avatars/${req.file.filename}`);
             }
 
             const duplicatedField = Object.keys(error.keyValue)[0];
@@ -244,14 +244,14 @@ async function updateUser(req, res) {
             await deleteOldImage(existingUser.avatarUrl);
 
             // Asignar la nueva ruta de avatar
-            inputData.avatarUrl = `/uploads/avatars/${req.file.filename}`;
+            inputData.avatarUrl = `uploads/avatars/${req.file.filename}`;
         }
         // SI NO SUBIÓ ARCHIVO PERO SOLICITÓ REESTABLECER EL AVATAR (enviando avatarUrl vacío "")
         else if (inputData.avatarUrl === '') {
             // Eliminar la imagen previa personalizada del disco
             await deleteOldImage(existingUser.avatarUrl);
             // Reasignar a la imagen por defecto
-            inputData.avatarUrl = '/uploads/avatars/default-avatar.png';
+            inputData.avatarUrl = 'uploads/avatars/default-avatar.png';
         }
 
         // Proceder a la actualización definitiva
@@ -266,7 +266,7 @@ async function updateUser(req, res) {
 
         // Eliminar la imagen física del avatar usando el helper (si no era la por defecto)
         if (req.file) {
-            await deleteOldImage(`/uploads/avatars/${req.file.filename}`);
+            await deleteOldImage(`uploads/avatars/${req.file.filename}`);
         }
 
         // A. Capturar error de negocio: El usuario no existe en el sistema

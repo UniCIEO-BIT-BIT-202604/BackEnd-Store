@@ -44,7 +44,7 @@ const UserSchema = new Schema({
     },
     avatarUrl: {
         type: String,
-        default: '/uploads/avatars/default-avatar.png'
+        default: 'uploads/avatars/default-avatar.png'
     }
 }, {
     versionKey: false,
