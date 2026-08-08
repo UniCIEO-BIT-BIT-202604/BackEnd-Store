@@ -5,11 +5,11 @@ const dbCreateProduct = async (newProduct) => {
 }
 
 const dbGetProducts = async () => {
-    return await ProductModel.find();
+    return await ProductModel.find().populate('category');
 }
 
 const dbGetProductById = async (id) => {
-    return await ProductModel.findOne({ _id: id });
+    return await ProductModel.findOne({ _id: id }).populate('category');
 }
 
 const dbDeleteProduct = async (id) => {

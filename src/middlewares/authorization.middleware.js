@@ -1,5 +1,5 @@
 // Definicion de un 'Closure', que no es mas que una funcione que retorna otra funcion
-const authorizationUser = ( allowedRoles = [] ) => {
+const authorizationUser = (allowedRoles = []) => {
   return (req, res, next) => {
     try {
       // Paso 1: Extrae el rol del req.body
@@ -40,4 +40,5 @@ const authorizationUser = ( allowedRoles = [] ) => {
   };
 };
 
-export { authorizationUser };
+export default authorizationUser;
+
