@@ -51,14 +51,7 @@ const ProductSchema = new Schema({
         validate: [
             {
                 validator: function (val) {
-                    // Al crear un producto, requerir al menos 1 imagen
-                    return Array.isArray(val) && val.length > 0;
-                },
-                message: 'El producto debe incluir al menos una (1) imagen'
-            },
-            {
-                validator: function (val) {
-                    // Restricción máxima de 9 imágenes
+                    // Restricción máxima de 9 imágenes (permite 0 imágenes al eliminar todas)
                     return Array.isArray(val) && val.length <= 9;
                 },
                 message: 'No se pueden asociar más de nueve (9) imágenes a un producto'

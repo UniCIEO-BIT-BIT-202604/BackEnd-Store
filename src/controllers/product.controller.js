@@ -154,12 +154,22 @@ const updateProduct = async (req, res) => {
 
         let updatedImages = currentProduct.images.map(img => (typeof img.toObject === 'function' ? img.toObject() : { ...img }));
 
-        // 2. ELIMINAR UNA IMAGEN ESPECÍFICA (Si se recibe deleteImageUrl en el body)
-        if (inputData.deleteImageUrl) {
+        // 2. ELIMINAR IMÁGENES (deleteAllImages, deleteImageUrl o deleteImageUrls)
+        if (inputData.deleteAllImages === 'true' || inputData.deleteAllImages === true) {
+            const allUrls = updatedImages.map(img => img.url);
+            await deleteMultipleImages(allUrls);
+            updatedImages = [];
+            delete inputData.deleteAllImages;
+        } else if (inputData.deleteImageUrl) {
             const targetDeleteUrl = inputData.deleteImageUrl.trim();
             await deleteOldImage(targetDeleteUrl);
             updatedImages = updatedImages.filter(img => img.url !== targetDeleteUrl);
             delete inputData.deleteImageUrl;
+        } else if (Array.isArray(inputData.deleteImageUrls)) {
+            await deleteMultipleImages(inputData.deleteImageUrls);
+            const urlsToDelete = new Set(inputData.deleteImageUrls);
+            updatedImages = updatedImages.filter(img => !urlsToDelete.has(img.url));
+            delete inputData.deleteImageUrls;
         }
 
         // 3. AÑADIR NUEVAS IMÁGENES SUBIDAS (req.files)

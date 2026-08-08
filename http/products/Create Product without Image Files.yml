@@ -7,11 +7,7 @@ http:
   method: POST
   url: http://localhost:3000/api/products
   body:
-    type: json
-    data: |-
-      {
-        "name": "Tablet Samsung Galaxy A1"
-      }
+    type: multipart-form
   auth: inherit
 
 settings:

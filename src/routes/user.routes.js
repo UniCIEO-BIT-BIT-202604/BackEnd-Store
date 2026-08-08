@@ -7,8 +7,8 @@ import { getUsers, getUserById, createUser, updateUser, deleteUser } from '../co
 import authenticationUser from '../middlewares/authentication.middleware.js';
 import { authorizationUser } from '../middlewares/authorization.middleware.js';
 import { ROLES } from '../config/global.config.js';
-import { uploadAvatar } from '../middlewares/upload.middleware.js';
-import { handleUploadAvatar } from '../middlewares/handleUpload.middleware.js';
+import { uploadAvatar } from '../middlewares/uploadAvatar.middleware.js';
+import { handleUploadAvatar } from '../middlewares/handleUploadAvatar.middleware.js';
 
 
 // Definicion de las rutas para los usuarios (ADMIN), para acceder a ellas deberiamos entonces usar la siguiente ruta --> http://localhost:3000/api/users
