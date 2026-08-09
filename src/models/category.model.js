@@ -23,7 +23,7 @@ const CategorySchema = new Schema({
     },
     urlImage: {
         type: String,
-        default: ''
+        default: '/uploads/categories/default-category.png'
     },
 
     status: {

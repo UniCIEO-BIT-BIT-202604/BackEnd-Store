@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { dbDeleteCategory, dbGetCategories, dbGetCategoryById, dbUpdateCategory, insertCategory } from "../services/category.services.js";
+import { deleteOldImage } from "../helpers/file-storage.js";
+
+const DEFAULT_CATEGORY_IMAGE = '/uploads/categories/default-category.png';
 
 const generateSlug = (text) => {
     if (!text) return '';
@@ -53,6 +56,11 @@ const createCategory = async (req, res) => {
             inputData.slug = generateSlug(inputData.name);
         }
 
+        // Si se subió un archivo físico de imagen, asignar su ruta
+        if (req.file) {
+            inputData.urlImage = `/uploads/categories/${req.file.filename}`;
+        }
+
         const data = await insertCategory(inputData);
         res.status(201).json({
             msg: 'Categoría creada exitosamente',
@@ -60,6 +68,11 @@ const createCategory = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
+        // Si ocurrió un error en BD y se había subido archivo, borrarlo del disco
+        if (req.file) {
+            await deleteOldImage(`/uploads/categories/${req.file.filename}`);
+        }
+
         if (error.code === 11000) {
             return res.status(400).json({
                 msg: 'Error de duplicidad: Ya existe una categoría con ese nombre o slug'
@@ -75,7 +88,18 @@ const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
         if (!mongoose.Types.ObjectId.isValid(id)) {
+            if (req.file) {
+                await deleteOldImage(`/uploads/categories/${req.file.filename}`);
+            }
             return res.status(400).json({ msg: 'ID de categoría inválido' });
+        }
+
+        const existingCategory = await dbGetCategoryById(id);
+        if (!existingCategory) {
+            if (req.file) {
+                await deleteOldImage(`/uploads/categories/${req.file.filename}`);
+            }
+            return res.status(404).json({ msg: 'La categoría a actualizar no existe' });
         }
 
         const inputData = { ...req.body };
@@ -83,17 +107,32 @@ const updateCategory = async (req, res) => {
             inputData.slug = generateSlug(inputData.name);
         }
 
-        const data = await dbUpdateCategory(id, inputData);
-        if (!data) {
-            return res.status(404).json({ msg: 'La categoría a actualizar no existe' });
+        // CASO 1: El cliente envía una NUEVA imagen física
+        if (req.file) {
+            // Eliminar imagen previa en disco (si no era la por defecto)
+            if (existingCategory.urlImage && !existingCategory.urlImage.includes('default-category.png')) {
+                await deleteOldImage(existingCategory.urlImage);
+            }
+            inputData.urlImage = `/uploads/categories/${req.file.filename}`;
+        }
+        // CASO 2: El cliente solicita quitar la imagen asignando urlImage como cadena vacía
+        else if (req.body.urlImage === '') {
+            if (existingCategory.urlImage && !existingCategory.urlImage.includes('default-category.png')) {
+                await deleteOldImage(existingCategory.urlImage);
+            }
+            inputData.urlImage = DEFAULT_CATEGORY_IMAGE;
         }
 
+        const data = await dbUpdateCategory(id, inputData);
         res.json({
             msg: 'Categoría actualizada exitosamente',
             data
         });
     } catch (error) {
         console.error(error);
+        if (req.file) {
+            await deleteOldImage(`/uploads/categories/${req.file.filename}`);
+        }
         if (error.code === 11000) {
             return res.status(400).json({
                 msg: 'Error de duplicidad: Ya existe una categoría con ese nombre o slug'
@@ -112,11 +151,17 @@ const deleteCategory = async (req, res) => {
             return res.status(400).json({ msg: 'ID de categoría inválido' });
         }
 
-        const data = await dbDeleteCategory(id);
-        if (!data) {
+        const category = await dbGetCategoryById(id);
+        if (!category) {
             return res.status(404).json({ msg: 'Categoría no encontrada' });
         }
 
+        // Eliminar imagen física del disco si no es la por defecto
+        if (category.urlImage && !category.urlImage.includes('default-category.png')) {
+            await deleteOldImage(category.urlImage);
+        }
+
+        const data = await dbDeleteCategory(id);
         res.json({
             msg: 'Categoría eliminada exitosamente',
             data
