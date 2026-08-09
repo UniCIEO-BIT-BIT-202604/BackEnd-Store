@@ -1,18 +1,36 @@
-import categoryModel from "../models/category.model.js"
+import categoryModel from "../models/category.model.js";
 
-
-const insertCategory = async (newCategory)=>{
+const insertCategory = async (newCategory) => {
     return await categoryModel.create(newCategory);
-}
+};
 
 const dbGetCategories = async () => {
     return await categoryModel.find();
-}
+};
+
+const dbGetCategoryById = async (id) => {
+    return await categoryModel.findById(id);
+};
+
+const dbUpdateCategory = async (id, inputData) => {
+    return await categoryModel.findByIdAndUpdate(
+        id,
+        inputData,
+        {
+            returnDocument: 'after',
+            runValidators: true
+        }
+    );
+};
+
+const dbDeleteCategory = async (id) => {
+    return await categoryModel.findByIdAndDelete(id);
+};
 
 const dbGetDefaultCategory = async () => {
     try {
-        let category = await categoryModel.findOne({ 
-            $or: [{ slug: 'sin-categoria' }, { name: 'Sin Categoría' }] 
+        let category = await categoryModel.findOne({
+            $or: [{ slug: 'sin-categoria' }, { name: 'Sin Categoría' }]
         });
 
         if (!category) {
@@ -34,5 +52,8 @@ const dbGetDefaultCategory = async () => {
 export {
     insertCategory,
     dbGetCategories,
+    dbGetCategoryById,
+    dbUpdateCategory,
+    dbDeleteCategory,
     dbGetDefaultCategory
-}
+};
