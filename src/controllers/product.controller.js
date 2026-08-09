@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { dbCreateProduct, dbDeleteProduct, dbGetProductById, dbGetProducts, dbUpdateProduct } from "../services/product.service.js";
 import { deleteMultipleImages, deleteOldImage } from "../helpers/file-storage.js";
+import { dbGetDefaultCategory } from "../services/category.services.js";
 
 // Controller: Se encarga de manejar las Peticiones y las Respuestas de los Clientes
 const createProduct = async (req, res) => {
@@ -23,6 +24,14 @@ const createProduct = async (req, res) => {
             ...req.body,
             images: imageObjects
         };
+
+        // Si no seleccionó categoría o envió cadena vacía/nula, asignar "Sin Categoría"
+        if (!inputData.category || inputData.category === '' || inputData.category === 'null' || inputData.category === 'undefined') {
+            const defaultCat = await dbGetDefaultCategory();
+            if (defaultCat) {
+                inputData.category = defaultCat._id;
+            }
+        }
 
         const data = await dbCreateProduct(inputData);
 

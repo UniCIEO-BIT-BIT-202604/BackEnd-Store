@@ -36,6 +36,11 @@ const ProductSchema = new Schema({
         type: Boolean,
         default: true
     },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'category',
+        required: [true, 'La categoría del producto es obligatoria']
+    },
     // Estructura para el arreglo de imágenes con validadores y mensajes de error personalizados
     images: {
         type: [{
