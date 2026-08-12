@@ -45,7 +45,11 @@ const UserSchema = new Schema({
     avatar: {
         type: String,
         default: ''
-    }
+    },
+    contacts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'contact'
+    }]
 }, {
     versionKey: false,
     timestamps: true
