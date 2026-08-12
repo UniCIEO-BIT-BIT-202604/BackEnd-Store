@@ -115,6 +115,10 @@ async function createUser(req, res) {
         }
         // Si no se envía archivo, Mongoose aplicará automáticamente la imagen por defecto
 
+        if (typeof inputData.status === 'string') {
+            inputData.status = inputData.status === 'true';
+        }
+
         inputData.password = encryptedPassword(inputData.password);
 
         const data = await dbCreateUser(inputData);
