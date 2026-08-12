@@ -42,14 +42,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: true
     },
-    avatar: {
+    avatarUrl: {
         type: String,
-        default: ''
-    },
-    contacts: [{
-        type: Schema.Types.ObjectId,
-        ref: 'contact'
-    }]
+        default: 'uploads/avatars/default-avatar.png'
+    }
 }, {
     versionKey: false,
     timestamps: true

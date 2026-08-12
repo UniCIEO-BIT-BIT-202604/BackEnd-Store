@@ -16,26 +16,27 @@ const PORT = process.env.PORT || 3001;
 dbConection();
 
 // Middlewares
-app.use( express.json() );      // Habilita la interpretacion JSON
-app.use( cors(
+app.use(express.json());      // Habilita la interpretacion JSON
+app.use(cors(
     // { origin: 'http://localhost:4200' }
-) );
+));
+app.use('/uploads', express.static('public/uploads'));  // Configura directorio para servir archivos estáticos
 
 // Endpoint
-app.get( '/health', ( req, res ) => {
+app.get('/health', (req, res) => {
     res.json({
         msg: 'Sitio funcionando! :)'
     });
-} );
+});
 
 // Endpoints agrupados por entidad
-app.use( '/api/users', userRoutes );
-app.use( '/api/products', productRoutes );
-app.use( '/api/categories', categoryRoutes );
-app.use( '/api/auth', authRoutes );
-app.use( '/api/roles', roleRoutes );
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/roles', roleRoutes);
 
 // Lanzo el servidor web
-app.listen( PORT, () => {
-    console.log( `Server running on http://localhost:3000` );
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:3000`);
 });

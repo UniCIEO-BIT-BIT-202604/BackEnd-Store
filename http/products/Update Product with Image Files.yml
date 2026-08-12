@@ -1,0 +1,52 @@
+info:
+  name: Update Product with Image Files
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/products/6a664007e03824b3abc70a40
+  body:
+    type: multipart-form
+    data:
+      - name: referenceCode
+        type: text
+        value: TEC-0003
+        disabled: true
+      - name: name
+        type: text
+        value: Teclado Mecánico RGB Pro
+        disabled: true
+      - name: description
+        type: text
+        value: Teclado mecánico RGB con switches red actualizados y mayor precisión.
+        disabled: true
+      - name: price
+        type: text
+        value: "70"
+      - name: stock
+        type: text
+        value: "9"
+      - name: status
+        type: text
+        value: "true"
+        disabled: true
+      - name: images
+        type: text
+        value: ""
+        disabled: true
+      - name: deleteImageUrl
+        type: text
+        value: /uploads/products/product-1785086405306-101229855.jpg
+        description: Solo pase la URL de la imagen que desea eliminar
+      - name: mainImageUrl
+        type: text
+        value: /uploads/products/product-1785087180458-823146796.jpg
+        description: Solo pase la URL de la imagen que desea cambiar como principal
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

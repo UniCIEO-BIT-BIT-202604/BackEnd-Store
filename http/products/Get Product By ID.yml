@@ -1,11 +1,11 @@
 info:
-  name: Delete Product By Id
+  name: Get Product By ID
   type: http
-  seq: 3
+  seq: 7
 
 http:
-  method: DELETE
-  url: http://localhost:3000/api/products/6a163994590b769c0f0aa623
+  method: GET
+  url: http://localhost:3000/api/products/6a777e6408265c42c13512f5
   auth: inherit
 
 settings:
