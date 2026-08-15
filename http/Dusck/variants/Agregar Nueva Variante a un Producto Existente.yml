@@ -1,0 +1,32 @@
+info:
+  name: Agregar Nueva Variante a un Producto Existente
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:3000/api/products/6a7b750d862872418124f1f0/variants
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiYXZhdGFyIjoiaHR0cHM6Ly9hcGkuZGljZWJlYXIuY29tLzcueC9pbml0aWFscy9zdmc_c2VlZD1BbWVkIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY0NzQ4NzcsImV4cCI6MTc4NjQ3ODQ3N30.cZavZemMj_Q8mmPxeI2_zoJaqirza1J0r5llrWzMCAU
+  body:
+    type: json
+    data: |-
+      {
+        "sku": "TEN-ADI-ROJO-41",
+        "size": "41",
+        "color": {
+          "name": "Rojo Carmesí",
+          "hex": "#DC143C"
+        },
+        "stock": 8,
+        "additionalPrice": 10000,
+        "images": ["https://midominio.com/imagenes/productos/ultraboost-rojo-41.jpg"]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

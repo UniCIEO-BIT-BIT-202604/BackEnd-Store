@@ -1,0 +1,15 @@
+info:
+  name: Listar Variantes de un Producto
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:3000/api/products/6a7b750d862872418124f1f0/variants
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

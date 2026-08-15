@@ -1,0 +1,29 @@
+info:
+  name: Update Cart
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/cart
+  headers:
+    - name: X-Token
+      value: {{token}}
+  body:
+    type: json
+    data: |-
+      {
+        "items": [
+          {
+            "product": "60d5ecb8b5c9c22b8c8b4567",
+            "quantity": 2
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

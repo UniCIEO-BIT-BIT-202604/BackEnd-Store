@@ -1,0 +1,7 @@
+info:
+  name: shopping-cart
+  type: folder
+  seq: 7
+
+request:
+  auth: inherit

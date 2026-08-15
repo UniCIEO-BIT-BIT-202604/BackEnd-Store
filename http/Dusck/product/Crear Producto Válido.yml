@@ -1,0 +1,60 @@
+info:
+  name: Crear Producto Válido
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/products
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiYXZhdGFyIjoiaHR0cHM6Ly9hcGkuZGljZWJlYXIuY29tLzcueC9pbml0aWFscy9zdmc_c2VlZD1BbWVkIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY0NzQ4NzcsImV4cCI6MTc4NjQ3ODQ3N30.cZavZemMj_Q8mmPxeI2_zoJaqirza1J0r5llrWzMCAU
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Tennis Running Ultraboost",
+        "brand": "Adidas",
+        "description": "Zapatos deportivos de alto rendimiento con suela antideslizante",
+        "basePrice": 350000,
+        "offerPrice": 299900,
+        "category": "6a7b724e862872418124f1ef",
+        "gender": "men",
+        "specifications": [
+          { "name": "Tipo de Suela", "value": "Goma EVA y Caucho" },
+          { "name": "Tipo de Ajuste", "value": "Cordones elásticos" }
+        ],
+        "shipping": {
+          "weightGrams": 850,
+          "dimensions": {
+            "heightCm": 12,
+            "widthCm": 20,
+            "lengthCm": 32
+          }
+        },
+        "generalImages": ["https://midominio.com/imagenes/productos/ultraboost-1.jpg"],
+        "variants": [
+          {
+            "sku": "TEN-ADI-NEGRO-39",
+            "size": "39",
+            "color": { "name": "Negro", "hex": "#000000" },
+            "stock": 15,
+            "additionalPrice": 0
+          },
+          {
+            "sku": "TEN-ADI-NEGRO-40",
+            "size": "40",
+            "color": { "name": "Negro", "hex": "#000000" },
+            "stock": 10,
+            "additionalPrice": 0
+          }
+        ],
+        "tags": ["tennis", "running", "deporte", "calzado"]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

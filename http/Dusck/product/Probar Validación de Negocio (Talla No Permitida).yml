@@ -1,0 +1,37 @@
+info:
+  name: Probar Validación de Negocio (Talla No Permitida)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:3000/api/products
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiYXZhdGFyIjoiaHR0cHM6Ly9hcGkuZGljZWJlYXIuY29tLzcueC9pbml0aWFscy9zdmc_c2VlZD1BbWVkIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY0NzQ4NzcsImV4cCI6MTc4NjQ3ODQ3N30.cZavZemMj_Q8mmPxeI2_zoJaqirza1J0r5llrWzMCAU
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Zapato Error Test",
+        "brand": "Nike",
+        "description": "Prueba de error de validación",
+        "basePrice": 100000,
+        "category": "6a7b724e862872418124f1ef",
+        "gender": "men",
+        "variants": [
+          {
+            "sku": "ZAP-ERR-XL",
+            "size": "XL",
+            "color": { "name": "Azul" },
+            "stock": 5
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

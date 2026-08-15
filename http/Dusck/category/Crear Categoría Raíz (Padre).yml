@@ -1,0 +1,39 @@
+info:
+  name: Crear Categoría Raíz (Padre)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/categories
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiYXZhdGFyIjoiaHR0cHM6Ly9hcGkuZGljZWJlYXIuY29tLzcueC9pbml0aWFscy9zdmc_c2VlZD1BbWVkIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY0NzQ4NzcsImV4cCI6MTc4NjQ3ODQ3N30.cZavZemMj_Q8mmPxeI2_zoJaqirza1J0r5llrWzMCAU
+  body:
+    type: json
+    data: |-
+      // Crear Categoria Raíz
+      // {
+      //   "name": "Hombre",
+      //   "description": "Sección principal de vestimenta y calzado para hombre",
+      //   "displayOrder": 1,
+      //   "isFeatured": true,
+      //   "imageUrl": "https://midominio.com/imagenes/categorias/hombre.jpg"
+      // }
+
+      // Crear Sub-Categoría  con tallas permitidas <ID_CATEGORIA_HOMBRE>
+      {
+        "name": "Calzado Masculino",
+        "description": "Tennis y zapatos deportivos para caballero",
+        "parentCategory": "6a7b718c862872418124f1ed",
+        "sizes": ["38", "39", "40", "41", "42"],
+        "sizeGuide": "https://midominio.com/guias/tallas-calzado.pdf",
+        "displayOrder": 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
