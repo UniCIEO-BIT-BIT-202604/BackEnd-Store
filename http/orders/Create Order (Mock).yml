@@ -1,0 +1,30 @@
+info:
+  name: Create Order (Mock)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/orders
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbmlzdHJhdG9yIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY4NDQzNTYsImV4cCI6MTc4Njg0Nzk1Nn0.uVqx6SxUS2l1YqdcedljEU4pnv-s_nvMRsoJWTYWNZE
+  body:
+    type: json
+    data: |-
+      {
+        "shippingAddress": {
+          "address": "Calle 123 #45-67, Apto 502",
+          "city": "Bogotá",
+          "phone": "+57 300 123 4567",
+          "notes": "Dejar en la portería del edificio"
+        },
+        "paymentMethod": "MOCK_CARD"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -8,6 +8,7 @@ import categoryRoutes from './routes/category.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import roleRoutes from './routes/roles.routes.js';
 import cartRoutes from './routes/cart.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -37,6 +38,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Lanzo el servidor web
 app.listen(PORT, () => {

@@ -8,7 +8,7 @@ http:
   url: http://localhost:3000/api/cart
   headers:
     - name: X-Token
-      value: {{token}}
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbmlzdHJhdG9yIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY4MjE4NjUsImV4cCI6MTc4NjgyNTQ2NX0.UwR8LtXf9m1kjaQW04cuvHviGrPT1X6fTN-Rfh37E24
   auth: inherit
 
 settings:

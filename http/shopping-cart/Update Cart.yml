@@ -8,15 +8,19 @@ http:
   url: http://localhost:3000/api/cart
   headers:
     - name: X-Token
-      value: {{token}}
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbmlzdHJhdG9yIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY4MTc5MTQsImV4cCI6MTc4NjgyMTUxNH0.YxJTGK742wcHt8ELmKRmF0K0AN1Cdk4NJr6TS_vQZa8
   body:
     type: json
     data: |-
       {
         "items": [
           {
-            "product": "60d5ecb8b5c9c22b8c8b4567",
-            "quantity": 2
+            "product": "6a78c5a54ff8470781f10a9f",
+            "quantity": 1000
+          },
+          {
+            "product": "6a78c8594ff8470781f10b0e",
+            "quantity": 1
           }
         ]
       }

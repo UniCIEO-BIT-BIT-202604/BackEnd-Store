@@ -1,0 +1,7 @@
+info:
+  name: orders
+  type: folder
+  seq: 8
+
+request:
+  auth: inherit

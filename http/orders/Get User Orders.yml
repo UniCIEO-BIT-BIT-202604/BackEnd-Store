@@ -1,0 +1,18 @@
+info:
+  name: Get User Orders
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:3000/api/orders
+  headers:
+    - name: X-Token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTY5NTRlNzhjODU4YTJjYTVjY2YwMjIiLCJuYW1lIjoiQW1lZCIsIm5pY2tuYW1lIjoiYW1lZCIsImVtYWlsIjoiYW1lZEBleGFtcGxlLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbmlzdHJhdG9yIiwic3RhdHVzIjp0cnVlLCJpYXQiOjE3ODY4NDQzNTYsImV4cCI6MTc4Njg0Nzk1Nn0.uVqx6SxUS2l1YqdcedljEU4pnv-s_nvMRsoJWTYWNZE
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
